@@ -1,0 +1,19 @@
+{
+  "name": "api-search",
+  "version": "1.0.0",
+  "description": "Spacenow search API.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/spacenow-api/api-search.git"
+  },
+  "author": "Spacenow",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/spacenow-api/api-search/issues"
+  },
+  "homepage": "https://github.com/spacenow-api/api-search#readme"
+}
