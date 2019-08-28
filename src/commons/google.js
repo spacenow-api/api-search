@@ -1,3 +1,5 @@
+'use strict'
+
 const axios = require('axios')
 
 const GOOGLE_KEY = process.env.GOOGLE_MAP_API
