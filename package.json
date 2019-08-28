@@ -4,7 +4,7 @@
   "description": "Spacenow search API.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "debug": "export SLS_DEBUG=* && node --inspect ./node_modules/.bin/serverless offline -s dev -P 6008"
   },
   "repository": {
     "type": "git",
@@ -15,5 +15,12 @@
   "bugs": {
     "url": "https://github.com/spacenow-api/api-search/issues"
   },
-  "homepage": "https://github.com/spacenow-api/api-search#readme"
+  "homepage": "https://github.com/spacenow-api/api-search#readme",
+  "devDependencies": {
+    "serverless": "~1.50.1",
+    "serverless-offline": "~5.10.1"
+  },
+  "dependencies": {
+    "axios": "~0.19.0"
+  }
 }
