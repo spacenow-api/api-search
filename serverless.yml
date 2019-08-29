@@ -61,12 +61,19 @@ plugins:
   - serverless-dotenv-plugin
 
 functions:
-  search:
+  searchListingsByLatLng:
     handler: src/functions/searchListingsByLatLng.main
     events:
       - http:
           path: search/{latlng}/listings
           method: get
+          cors: true
+  searchStore:
+    handler: src/functions/searchStore.main
+    events:
+      - http:
+          path: search/{latlng}/store
+          method: post
           cors: true
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events

@@ -3,11 +3,11 @@
 const searchService = require('./../services/search.service')
 
 /**
- * Get a list of listing Ids by a lat and lng.
+ * Store a set of listing data on Redis to futures search with one o more filters.
  */
 module.exports.main = async (event) => {
   try {
-    const searchResult = await searchService.searchListingIds(event.pathParameters.latlng)
+    const searchResult = await searchService.searchStore(event.pathParameters.latlng, JSON.parse(event.body))
     return {
       statusCode: 200,
       body: JSON.stringify(searchResult),
