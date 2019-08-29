@@ -18,7 +18,9 @@ function getRedisKey(value) {
 function getLatLngObj(latlng) {
   const latAndLng = latlng && latlng.split(',')
   if (!latlng || !latAndLng || latAndLng.length <= 0)
-    throw new Error('Latitude or longitude are missing to call Google Maps API.')
+    throw new Error(
+      'Latitude or longitude are missing to call Google Maps API.'
+    )
   return {
     lat: latAndLng[0],
     lng: latAndLng[1]
@@ -53,4 +55,11 @@ async function searchStore(latlng, userId, listings) {
   return { searchKey: hashKey }
 }
 
-module.exports = { searchListingIds, searchStore }
+async function searchQuery(searchkey, filters) {
+  const listingData = await redis.get(searchkey)
+  if (!listingData) return { status: 'empty' }
+  const listingResult = JSON.parse(listingData)
+  return { status: 'OK', result: listingResult }
+}
+
+module.exports = { searchListingIds, searchStore, searchQuery }
