@@ -1,11 +1,15 @@
 'use strict'
 
+require('./../helpers/mysql.server').initInstance()
+require('./../helpers/redis.server').initInstance()
+
 const searchService = require('./../services/search.service')
 
 /**
  * Store a set of listing data on Redis to futures search with one o more filters.
  */
-module.exports.main = async (event) => {
+module.exports.main = async (event, context) => {
+  context.callbackWaitsForEmptyEventLoop = false
   try {
     const data = JSON.parse(event.body)
     if (!data.userId || !data.listings)

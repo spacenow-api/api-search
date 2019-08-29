@@ -4,11 +4,21 @@ const Redis = require('ioredis')
 
 let redis = null
 
-if (!redis) {
-  redis = new Redis({
-    host: process.env.REDIS_HOST,
-    port: process.env.REDIS_PORT
-  })
+function initInstance() {
+  if (!redis) {
+    console.info('Initializing Redis connection.')
+    redis = new Redis({
+      host: process.env.REDIS_HOST,
+      port: process.env.REDIS_PORT
+    })
+  }
 }
 
-module.exports = redis
+function getInstance() {
+  if (!redis) {
+    initInstance()
+  }
+  return redis
+}
+
+module.exports = { initInstance, getInstance }

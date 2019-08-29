@@ -4,7 +4,7 @@ const { Op } = require('sequelize')
 const crypto = require('crypto')
 
 const googleAPI = require('./../commons/google')
-const redis = require('./../helpers/redis.server')
+const { getInstance: redisInstance } = require('./../helpers/redis.server')
 
 const { Location, Listing } = require('./../models')
 
@@ -51,12 +51,12 @@ async function searchListingIds(latlng) {
 
 async function searchStore(latlng, userId, listings) {
   const hashKey = getRedisKey(`${latlng}-${userId}`)
-  redis.set(hashKey, JSON.stringify(listings))
+  redisInstance().set(hashKey, JSON.stringify(listings))
   return { searchKey: hashKey }
 }
 
 async function searchQuery(searchkey, filters) {
-  const listingData = await redis.get(searchkey)
+  const listingData = await redisInstance().get(searchkey)
   if (!listingData) return { status: 'empty' }
   const listingResult = JSON.parse(listingData)
   return { status: 'OK', result: listingResult }

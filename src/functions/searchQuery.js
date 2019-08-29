@@ -1,14 +1,18 @@
 'use strict'
 
+require('./../helpers/mysql.server').initInstance()
+require('./../helpers/redis.server').initInstance()
+
 const searchService = require('./../services/search.service')
 
 /**
  * Get a result of listings by a Redis key and payload filters.
  */
-module.exports.main = async (event) => {
+module.exports.main = async (event, context) => {
+  context.callbackWaitsForEmptyEventLoop = false
   try {
     const searchResult = await searchService.searchQuery(
-      event.pathParameters.key,
+      event.pathParameters.searchKey,
       JSON.parse(event.body)
     )
     return {
