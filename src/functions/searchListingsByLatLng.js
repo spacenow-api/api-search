@@ -4,7 +4,7 @@ const searchService = require('./../services/search.service')
 
 module.exports.main = async (event) => {
   try {
-    const searchResult = await searchService.searchCreate(event.pathParameters.latlng)
+    const searchResult = await searchService.searchListingIds(event.pathParameters.latlng)
     return {
       statusCode: 200,
       body: JSON.stringify(searchResult),

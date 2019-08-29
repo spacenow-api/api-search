@@ -62,10 +62,10 @@ plugins:
 
 functions:
   search:
-    handler: src/functions/search.main
+    handler: src/functions/searchListingsByLatLng.main
     events:
       - http:
-          path: search/{latlng}/create
+          path: search/{latlng}/listings
           method: get
           cors: true
 #    The following are a few example events you can configure

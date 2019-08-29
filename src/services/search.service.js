@@ -6,7 +6,7 @@ const googleAPI = require('./../commons/google')
 
 const { Location, Listing } = require('./../models')
 
-async function searchCreate(latlng) {
+async function searchListingIds(latlng) {
   const latAndLng = latlng.split(',')
   if (!latAndLng)
     throw new Error('Latitude or longitude are missing to call Google Maps API.')
@@ -30,4 +30,4 @@ async function searchCreate(latlng) {
   return listingIds ? listingIds.map((o) => o.id) : []
 }
 
-module.exports = { searchCreate }
+module.exports = { searchListingIds }
