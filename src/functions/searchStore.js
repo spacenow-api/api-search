@@ -7,7 +7,14 @@ const searchService = require('./../services/search.service')
  */
 module.exports.main = async (event) => {
   try {
-    const searchResult = await searchService.searchStore(event.pathParameters.latlng, JSON.parse(event.body))
+    const data = JSON.parse(event.body)
+    if (!data.userId || !data.listings)
+      throw new Error('User ID or Listings payload are missing.')
+    const searchResult = await searchService.searchStore(
+      event.pathParameters.latlng,
+      data.userId,
+      data.listings
+    )
     return {
       statusCode: 200,
       body: JSON.stringify(searchResult),

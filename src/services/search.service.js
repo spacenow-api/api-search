@@ -1,17 +1,24 @@
 'use strict'
 
 const { Op } = require('sequelize')
+const crypto = require('crypto')
 
 const googleAPI = require('./../commons/google')
+const redis = require('./../helpers/redis.server')
 
 const { Location, Listing } = require('./../models')
+
+function getRedisKey(value) {
+  return crypto
+    .createHash('sha256')
+    .update(value, 'utf8')
+    .digest('hex')
+}
 
 function getLatLngObj(latlng) {
   const latAndLng = latlng && latlng.split(',')
   if (!latlng || !latAndLng || latAndLng.length <= 0)
-    throw new Error(
-      'Latitude or longitude are missing to call Google Maps API.'
-    )
+    throw new Error('Latitude or longitude are missing to call Google Maps API.')
   return {
     lat: latAndLng[0],
     lng: latAndLng[1]
@@ -40,8 +47,10 @@ async function searchListingIds(latlng) {
   return listingIds ? listingIds.map((o) => o.id) : []
 }
 
-async function searchStore(latlng, listingPayload) {
-  const latlngObj = getLatLngObj(latlng)
+async function searchStore(latlng, userId, listings) {
+  const hashKey = getRedisKey(`${latlng}-${userId}`)
+  redis.set(hashKey, JSON.stringify(listings))
+  return { searchKey: hashKey }
 }
 
 module.exports = { searchListingIds, searchStore }
