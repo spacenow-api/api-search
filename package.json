@@ -4,6 +4,7 @@
   "description": "Spacenow search API.",
   "main": "index.js",
   "scripts": {
+    "dev": "./node_modules/.bin/serverless offline -s dev -P 6008",
     "debug": "export SLS_DEBUG=* && node --inspect ./node_modules/.bin/serverless offline -s dev -P 6008"
   },
   "repository": {
