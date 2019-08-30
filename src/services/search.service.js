@@ -3,10 +3,10 @@
 const { Op } = require('sequelize')
 const crypto = require('crypto')
 
-const googleAPI = require('./../commons/google')
+const { getInstance: mysqlInstance } = require('./../helpers/mysql.server')
 const { getInstance: redisInstance } = require('./../helpers/redis.server')
 
-const { Location, Listing } = require('./../models')
+const { Listing } = require('./../models')
 
 function getRedisKey(value) {
   return crypto
@@ -29,18 +29,14 @@ function getLatLngObj(latlng) {
 
 async function searchListingIds(latlng) {
   const latlngObj = getLatLngObj(latlng)
-  const geoLocations = await googleAPI.getGeocode(latlngObj.lat, latlngObj.lng)
-  const latArray = geoLocations.map((o) => o.lat)
-  const lngArray = geoLocations.map((o) => o.lng)
-  const locations = await Location.findAll({
-    raw: true,
-    attributes: ['id'],
-    where: {
-      lat: { [Op.in]: latArray },
-      lng: { [Op.in]: lngArray }
-    }
-  })
-  const locationIds = locations ? locations.map((o) => o.id) : []
+  const locations = await mysqlInstance().query(
+    `SELECT * FROM Location WHERE ACOS(SIN(RADIANS(lat)) * SIN(RADIANS(${latlngObj.lat})) + COS(RADIANS(lat)) * COS(RADIANS(${latlngObj.lat})) * COS(RADIANS(lng) - RADIANS(${latlngObj.lng}))) * 6380 < 10`
+  )
+  let locationIds = []
+  if (locations) {
+    const firstResult = locations[0]
+    locationIds = firstResult.map((o) => o.id)
+  }
   const listingIds = await Listing.findAll({
     raw: true,
     attributes: ['id'],
