@@ -25,7 +25,7 @@ function getRedisKey(value) {
 function cacheStore(latlng, userId, listings) {
   const hashKey = getRedisKey(`${latlng}-${userId}`)
   redisInstance().set(hashKey, JSON.stringify(listings))
-  return { searchKey: hashKey }
+  return hashKey
 }
 
 function getLatLngObj(latlng) {
