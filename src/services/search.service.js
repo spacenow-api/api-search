@@ -22,7 +22,7 @@ function getRedisKey(value) {
     .digest('hex')
 }
 
-function searchStore(latlng, userId, listings) {
+function cacheStore(latlng, userId, listings) {
   const hashKey = getRedisKey(`${latlng}-${userId}`)
   redisInstance().set(hashKey, JSON.stringify(listings))
   return { searchKey: hashKey }
@@ -69,8 +69,8 @@ async function searchListingIds(latlng, userId) {
     }
   })
   const listingsResult = await fillListings(listings, locations)
-  const searchKey = searchStore(latlng, userId, listingsResult)
-  return { searchKey, results: listingsResult }
+  const searchKey = cacheStore(latlng, userId, listingsResult)
+  return { searchKey, listings: listingsResult }
 }
 
 async function fillListings(listings, locations) {
