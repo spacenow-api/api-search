@@ -1,14 +1,43 @@
 service: api-search
-app: api-search
-org: arthemus
-
-provider:
-  name: aws
-  runtime: nodejs10.x
 
 plugins:
   - serverless-offline
   - serverless-dotenv-plugin
+
+custom:
+  domains:
+    default: ${self:service}.${opt:stage, 'sandpit'}.cloud.spacenow.com
+    prod: ${self:service}.spacenow.com
+  customDomain:
+    domainName: ${self:custom.domains.${opt:stage, 'sandpit'}, self:custom.domains.default}
+    basePath: ''
+    stage: ${opt:stage, 'sandpit'}
+    certificateArn: ${ssm:/${opt:stageCert, 'SANDPIT'}/ACM_CERTIFICATE}
+    createRoute53Record: true
+    endpointType: 'regional'
+  prune:
+    automatic: true
+    number: 5
+
+dotenv:
+  path: ./.env
+  basePath: ./
+  include:
+    - DEBUG
+    - DOMAIN
+    - DATABASE_SCHEMA
+    - DATABASE_HOST
+    - DATABASE_USERNAME
+    - DATABASE_PASSWORD
+    - GOOGLE_MAP_API
+    - REDIS_HOST
+    - REDIS_PORT
+
+provider:
+  name: aws
+  runtime: nodejs10.x
+  stage: ${opt:stage, 'sandpit'}
+  region: ap-southeast-2
 
 functions:
   searchListingsByLatLng:
@@ -25,3 +54,6 @@ functions:
           path: search/{key}/query
           method: get
           cors: true
+
+resources:
+  - ${file(src/resources/api-gateway-errors.yml)}
