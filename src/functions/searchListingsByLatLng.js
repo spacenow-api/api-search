@@ -1,36 +1,12 @@
 'use strict'
 
-require('./../helpers/mysql.server').initInstance()
-require('./../helpers/redis.server').initInstance()
-
+const r = require('./../helpers/response.utils')
 const searchService = require('./../services/search.service')
 
-/**
- * Get a list of listing Ids by a lat and lng.
- */
-module.exports.main = async (event, context) => {
+module.exports.main = (event, context, callback) => {
   context.callbackWaitsForEmptyEventLoop = false
-  try {
-    const searchResult = await searchService.searchListingIds(event.pathParameters.latlng)
-    return {
-      statusCode: 200,
-      body: JSON.stringify(searchResult),
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Credentials': true
-      }
-    }
-  } catch (err) {
-    console.error(err)
-    return {
-      statusCode: 400,
-      body: JSON.stringify({
-        error: err.message ? err.message : 'Function error not identified.'
-      }),
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Credentials': true
-      }
-    }
-  }
+  searchService
+    .searchListingIds(event.pathParameters.latlng)
+    .then((data) => callback(null, r.success(data)))
+    .catch((err) => callback(null, r.failure(err)))
 }
