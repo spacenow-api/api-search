@@ -10,6 +10,7 @@ const ListingData = require('./../models/listingData.model')(getInstance(), Data
 const ListSettingsParent = require('./../models/listSettingsParent.model')(getInstance(), DataTypes)
 const ListSettings = require('./../models/listSettings.model')(getInstance(), DataTypes)
 const User = require('./../models/user.model')(getInstance(), DataTypes)
+const UserProfile = require('./../models/userProfile.model')(getInstance(), DataTypes)
 const ListingPhotos = require('./../models/listingPhotos.model')(getInstance(), DataTypes)
 
 module.exports = {
@@ -19,5 +20,6 @@ module.exports = {
   ListSettingsParent,
   ListSettings,
   User,
+  UserProfile,
   ListingPhotos
 }

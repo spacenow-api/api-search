@@ -12,7 +12,8 @@ const {
   ListSettingsParent,
   ListSettings,
   ListingPhotos,
-  User
+  User,
+  UserProfile
 } = require('./../models')
 
 function getRedisKey(value) {
@@ -103,7 +104,11 @@ async function fillListings(listings, locations) {
 
       // Getting user host details...
       const hostUser = await User.findOne({
+        raw: true,
         where: { id: listingObj.userId }
+      })
+      const hostProfile = await UserProfile.findOne({
+        where: { userId: hostUser.id }
       })
 
       searchResults.push({
@@ -113,7 +118,10 @@ async function fillListings(listings, locations) {
         category: categoryObj,
         subcategory: subCategoryObj,
         photos: photosArray,
-        host: hostUser
+        host: {
+          ...hostUser,
+          profile: hostProfile
+        }
       })
     }
     return searchResults
