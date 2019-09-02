@@ -22,9 +22,9 @@ function getRedisKey(value) {
     .digest('hex')
 }
 
-function cacheStore(latlng, userId, listings) {
-  const hashKey = getRedisKey(`${latlng}-${userId}`)
-  redisInstance().set(hashKey, JSON.stringify(listings))
+function cacheStore(latlng, salt, listings) {
+  const hashKey = getRedisKey(`${latlng}-${salt}`)
+  redisInstance().set(hashKey, JSON.stringify(listings), 'EX', 86400) // to expire key after 24 hours
   return hashKey
 }
 
@@ -69,7 +69,7 @@ async function searchListingIds(latlng, userId) {
     }
   })
   const listingsResult = await fillListings(listings, locations)
-  const searchKey = cacheStore(latlng, userId, listingsResult)
+  const searchKey = cacheStore(latlng, Date.now(), listingsResult)
   return { searchKey, listings: listingsResult }
 }
 

@@ -12,7 +12,7 @@ module.exports.main = async (event, context) => {
   context.callbackWaitsForEmptyEventLoop = false
   try {
     const searchResult = await searchService.searchQuery(
-      event.pathParameters.value,
+      event.pathParameters.key,
       JSON.parse(event.body)
     )
     return {

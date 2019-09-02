@@ -11,10 +11,7 @@ const searchService = require('./../services/search.service')
 module.exports.main = async (event, context) => {
   context.callbackWaitsForEmptyEventLoop = false
   try {
-    const searchResult = await searchService.searchListingIds(
-      event.pathParameters.latlng,
-      event.pathParameters.value
-    )
+    const searchResult = await searchService.searchListingIds(event.pathParameters.latlng)
     return {
       statusCode: 200,
       body: JSON.stringify(searchResult),

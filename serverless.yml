@@ -15,13 +15,13 @@ functions:
     handler: src/functions/searchListingsByLatLng.main
     events:
       - http:
-          path: search/{value}/listings/{latlng}
+          path: search/listings/{latlng}
           method: get
           cors: true
   searchQuery:
     handler: src/functions/searchQuery.main
     events:
       - http:
-          path: search/{value}/query
+          path: search/{key}/query
           method: get
           cors: true
