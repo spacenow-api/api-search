@@ -99,7 +99,7 @@ async function fillListings(listings, locations) {
 
       // Getting photos...
       const photosArray = await ListingPhotos.findAll({
-        where: { listingId: parentObj.id }
+        where: { listingId: listingObj.id }
       })
 
       // Getting user host details...
@@ -130,11 +130,11 @@ async function fillListings(listings, locations) {
   }
 }
 
-async function searchQuery(searchkey, filters) {
-  const listingData = await redisInstance().get(searchkey)
+async function searchQuery(searchKey, filters) {
+  const listingData = await redisInstance().get(searchKey)
   if (!listingData) return { status: 'empty' }
   const listingResult = JSON.parse(listingData)
-  return { status: 'OK', result: listingResult }
+  return { status: 'OK', searchKey, result: listingResult }
 }
 
 module.exports = { searchListingIds, searchQuery }
