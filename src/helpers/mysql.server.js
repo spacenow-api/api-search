@@ -4,11 +4,11 @@ const Sequelize = require('sequelize')
 
 let sequelize = null
 
-function initInstance() {
+async function initInstance() {
   if (!sequelize) {
     console.info('Initializing Sequelize connection.')
     try {
-      sequelize = new Sequelize({
+      sequelize = await new Sequelize({
         dialect: 'mysql',
         host: process.env.DATABASE_HOST,
         database: process.env.DATABASE_SCHEMA,

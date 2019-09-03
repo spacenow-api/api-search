@@ -47,6 +47,7 @@ async function searchListingIds(latlng) {
   const queryResults = await mysqlInstance().query(
     `SELECT * FROM Location WHERE ACOS(SIN(RADIANS(lat)) * SIN(RADIANS(${latlngObj.lat})) + COS(RADIANS(lat)) * COS(RADIANS(${latlngObj.lat})) * COS(RADIANS(lng) - RADIANS(${latlngObj.lng}))) * 6380 < 10`
   )
+  console.log('searchListingIds -> queryResults', queryResults)
   let locations = []
   let locationIds = []
   if (queryResults) {
