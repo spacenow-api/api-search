@@ -13,7 +13,8 @@ const {
   ListSettings,
   ListingPhotos,
   User,
-  UserProfile
+  UserProfile,
+  SubcategorySpecifications
 } = require('./../models')
 
 function getRedisKey(value) {
@@ -83,6 +84,20 @@ async function fillListings(listings, locations) {
         where: { listingId: listingObj.id }
       })
 
+      // Specifications...
+      const specificationsData = await SubcategorySpecifications.findAll({
+        where: { listSettingsParentId: listingObj.listSettingsParentId },
+        raw: true
+      })
+      const specificationsArray = []
+      for (const item of specificationsData) {
+        const settingsObj = await ListSettings.findOne({
+          where: { id: item.listSettingsSpecificationId },
+          raw: true
+        })
+        specificationsArray.push(settingsObj)
+      }
+
       // Getting location data...
       const locationData = locations.find((o) => o.id == listingObj.locationId)
 
@@ -114,6 +129,7 @@ async function fillListings(listings, locations) {
       searchResults.push({
         ...listingObj,
         listingData: listingData,
+        specifications: specificationsArray,
         location: locationData,
         category: categoryObj,
         subcategory: subCategoryObj,

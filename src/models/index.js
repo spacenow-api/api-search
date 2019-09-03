@@ -12,6 +12,7 @@ const ListSettings = require('./../models/listSettings.model')(getInstance(), Da
 const User = require('./../models/user.model')(getInstance(), DataTypes)
 const UserProfile = require('./../models/userProfile.model')(getInstance(), DataTypes)
 const ListingPhotos = require('./../models/listingPhotos.model')(getInstance(), DataTypes)
+const SubcategorySpecifications = require('./../models/subCategorySpecifications.model')(getInstance(), DataTypes)
 
 module.exports = {
   Location,
@@ -21,5 +22,6 @@ module.exports = {
   ListSettings,
   User,
   UserProfile,
-  ListingPhotos
+  ListingPhotos,
+  SubcategorySpecifications
 }
