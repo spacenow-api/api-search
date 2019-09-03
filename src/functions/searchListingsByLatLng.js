@@ -17,10 +17,10 @@ const r = require('./../helpers/response.utils')
 module.exports.main = async (event, context, callback) => {
   const instance = new Sequelize({
     dialect: 'mysql',
-    host: 'sandpit-spacenow-mysql.ceux00skpbdx.ap-southeast-2.rds.amazonaws.com', //process.env.DATABASE_HOST,
-    database: 'spacenow_2019', // process.env.DATABASE_SCHEMA,
-    username: 'spacenowtest', // process.env.DATABASE_USERNAME,
-    password: 'wPm9r5E9iF7S2y', // process.env.DATABASE_PASSWORD,
+    host: process.env.DATABASE_HOST,
+    database: process.env.DATABASE_SCHEMA,
+    username: process.env.DATABASE_USERNAME,
+    password: process.env.DATABASE_PASSWORD,
     logging: console.log
   })
   console.info('Sequelize instance ->', instance)
