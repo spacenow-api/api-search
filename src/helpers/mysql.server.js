@@ -19,7 +19,9 @@ function initInstance() {
 }
 
 function getInstance() {
+  console.info('call Sequelize.getInstance')
   if (!sequelize) {
+    console.info('init Sequelize')
     initInstance()
   }
   return sequelize
