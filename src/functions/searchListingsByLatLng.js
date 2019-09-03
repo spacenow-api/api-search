@@ -15,7 +15,7 @@ const r = require('./../helpers/response.utils')
 // }
 
 module.exports.main = async (event, context, callback) => {
-  const instance = new Sequelize({
+  const sequelize = new Sequelize({
     dialect: 'mysql',
     host: process.env.DATABASE_HOST,
     database: process.env.DATABASE_SCHEMA,
@@ -28,10 +28,20 @@ module.exports.main = async (event, context, callback) => {
   // console.log('Location instance ->', Location)
   // const locations = await Location.findAll()
   // console.log('Locations ->', locations)
-  try {
-    await instance.authenticate()
-    callback(null, r.success({ status: 'OK' }))
-  } catch (err) {
-    callback(null, r.failure(err))
-  }
+  sequelize
+    .authenticate()
+    .then(() => {
+      console.log('Connection has been established successfully.');
+      callback(null, r.success({ status: 'OK' }))
+    })
+    .catch(err => {
+      console.error('Unable to connect to the database:', err);
+      callback(null, r.failure(err))
+    });
+  // try {
+  //   await instance.authenticate()
+  //   callback(null, r.success({ status: 'OK' }))
+  // } catch (err) {
+  //   callback(null, r.failure(err))
+  // }
 }
