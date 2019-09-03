@@ -52,7 +52,7 @@ functions:
     events:
       - http:
           path: search/{key}/query
-          method: get
+          method: post
           cors: true
 
 resources:
