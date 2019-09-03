@@ -149,8 +149,49 @@ async function fillListings(listings, locations) {
 async function searchQuery(searchKey, filters) {
   const listingData = await redisInstance().get(searchKey)
   if (!listingData) return { status: 'empty' }
-  const listingResult = JSON.parse(listingData)
-  return { status: 'OK', searchKey, result: listingResult }
+  let filteredResult = JSON.parse(listingData)
+  if (filters) {
+    // Check categories...
+    if (filters.categories) {
+      const categoryIds = filters.categories
+        .split(',')
+        .map((o) => parseInt(o, 10))
+      if (categoryIds.length > 0) {
+        filteredResult = filteredResult.filter((o) =>
+          categoryIds.includes(o.category.id)
+        )
+      }
+    }
+    // Check duration...
+    if (filters.duration) {
+      const durationTypes = filters.duration.split(',')
+      if (durationTypes.length > 0) {
+        filteredResult = filteredResult.filter((o) =>
+          durationTypes.includes(o.bookingPeriod)
+        )
+      }
+    }
+    // Check minimum price...
+    if (filters.priceMin && filters.priceMin > 0) {
+      filteredResult = filteredResult.filter(
+        (o) => o.listingData.basePrice >= filters.priceMin
+      )
+    }
+    // Check maximun price...
+    if (filters.priceMax && filters.priceMax > 0) {
+      filteredResult = filteredResult.filter(
+        (o) => o.listingData.basePrice <= filters.priceMax
+      )
+    }
+    // Check instant booking...
+    if (filters.instant) {
+      const boolValue = /true/i.test(filters.instant)
+      filteredResult = filteredResult.filter(
+        (o) => (o.listingData.bookingType === 'instant') === boolValue
+      )
+    }
+  }
+  return { status: 'OK', searchKey, result: filteredResult }
 }
 
 module.exports = { searchListingIds, searchQuery }
