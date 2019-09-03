@@ -3,9 +3,10 @@ service: api-search
 plugins:
   - serverless-offline
   - serverless-dotenv-plugin
+  - serverless-domain-manager
+  - serverless-prune-plugin
 
 custom:
-  DOMAIN: ${ssm:/${opt:stageCert, 'SANDPIT'}/SPACENOW/DOMAIN}
   DATABASE_SCHEMA: ${ssm:/${opt:stageCert, 'SANDPIT'}/SPACENOW/DATABASE_SCHEMA}
   DATABASE_HOST: ${ssm:/${opt:stageCert, 'SANDPIT'}/SPACENOW/DATABASE_HOST}
   DATABASE_USERNAME: ${ssm:/${opt:stageCert, 'SANDPIT'}/SPACENOW/DATABASE_USERNAME}
