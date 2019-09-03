@@ -37,13 +37,13 @@ provider:
   runtime: nodejs10.x
   stage: ${opt:stage, 'sandpit'}
   region: ap-southeast-2
-  # vpc:
-  #   securityGroupIds:
-  #     - sg-0c2c8c0098706af84
-  #   subnetIds:
-  #     - subnet-0c75bbd1ea60481d4
-  #     - subnet-070ac699acd775765
-  #     - subnet-0eca793083726120c
+  vpc:
+    securityGroupIds:
+      - sg-0c2c8c0098706af84
+    subnetIds:
+      - subnet-0c75bbd1ea60481d4
+      - subnet-070ac699acd775765
+      - subnet-0eca793083726120c
   environment:
     DATABASE_SCHEMA: ${ssm:/${opt:stageCert, 'SANDPIT'}/SPACENOW/DATABASE_SCHEMA~true}
     DATABASE_HOST: ${ssm:/${opt:stageCert, 'SANDPIT'}/SPACENOW/DATABASE_HOST~true}
@@ -69,5 +69,5 @@ functions:
           cors: true
 
 resources:
-  - ${file(src/resources/vpc.yml)}
+  # - ${file(src/resources/vpc.yml)}
   - ${file(src/resources/api-gateway-errors.yml)}
