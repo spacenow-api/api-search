@@ -21,10 +21,11 @@ module.exports.main = async (event, context, callback) => {
     database: process.env.DATABASE_SCHEMA,
     username: process.env.DATABASE_USERNAME,
     password: process.env.DATABASE_PASSWORD,
-    logging: true
+    logging: console.log
   })
-  console.info(instance)
+  console.info('Sequelize instance ->', instance)
   const Location = require('./../models/location.model')(instance, DataTypes)
+  console.log('Location instance ->', Location)
   const locations = await Location.findAll()
   console.log('Locations ->', locations)
   callback(null, r.success({ status: 'OK' }))
