@@ -38,7 +38,7 @@ provider:
   stage: ${opt:stage, 'sandpit'}
   region: ap-southeast-2
   environment:
-    DATABASE_SCHEMA: ${ssm:/${opt:stageCert, 'SANDPIT'}/SPACENOW/DATABASE_SCHEMA}
+    DATABASE_SCHEMA: ${ssm:/${opt:stageCert, 'SANDPIT'}/SPACENOW/DATABASE_SCHEMA~false}
     DATABASE_HOST: ${ssm:/${opt:stageCert, 'SANDPIT'}/SPACENOW/DATABASE_HOST}
     DATABASE_USERNAME: ${ssm:/${opt:stageCert, 'SANDPIT'}/SPACENOW/DATABASE_USER}
     DATABASE_PASSWORD: ${ssm:/${opt:stageCert, 'SANDPIT'}/SPACENOW/DATABASE_PASSWORD}
