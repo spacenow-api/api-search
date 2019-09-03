@@ -20,7 +20,7 @@ module.exports.main = async (event, context, callback) => {
     host: 'sandpit-spacenow-mysql.ceux00skpbdx.ap-southeast-2.rds.amazonaws.com', //process.env.DATABASE_HOST,
     database: 'spacenow_2019', // process.env.DATABASE_SCHEMA,
     username: 'spacenowtest', // process.env.DATABASE_USERNAME,
-    password: 'Spac.918273!', // process.env.DATABASE_PASSWORD,
+    password: 'wPm9r5E9iF7S2y', // process.env.DATABASE_PASSWORD,
     logging: console.log
   })
   console.info('Sequelize instance ->', instance)
