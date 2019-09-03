@@ -5,6 +5,14 @@ plugins:
   - serverless-dotenv-plugin
 
 custom:
+  DOMAIN: ${ssm:/${opt:stageCert, 'SANDPIT'}/SPACENOW/DOMAIN}
+  DATABASE_SCHEMA: ${ssm:/${opt:stageCert, 'SANDPIT'}/SPACENOW/DATABASE_SCHEMA}
+  DATABASE_HOST: ${ssm:/${opt:stageCert, 'SANDPIT'}/SPACENOW/DATABASE_HOST}
+  DATABASE_USERNAME: ${ssm:/${opt:stageCert, 'SANDPIT'}/SPACENOW/DATABASE_USERNAME}
+  DATABASE_PASSWORD: ${ssm:/${opt:stageCert, 'SANDPIT'}/SPACENOW/DATABASE_PASSWORD}
+  GOOGLE_MAP_API: ${ssm:/${opt:stageCert, 'SANDPIT'}/SPACENOW/GOOGLE_MAP_API}
+  REDIS_HOST: ${ssm:/${opt:stageCert, 'SANDPIT'}/SPACENOW/REDIS_HOST}
+  REDIS_PORT: ${ssm:/${opt:stageCert, 'SANDPIT'}/SPACENOW/REDIS_PORT}
   domains:
     default: ${self:service}.${opt:stage, 'sandpit'}.cloud.spacenow.com
     prod: ${self:service}.spacenow.com
@@ -18,20 +26,6 @@ custom:
   prune:
     automatic: true
     number: 5
-
-dotenv:
-  path: ./.env
-  basePath: ./
-  include:
-    - DEBUG
-    - DOMAIN
-    - DATABASE_SCHEMA
-    - DATABASE_HOST
-    - DATABASE_USERNAME
-    - DATABASE_PASSWORD
-    - GOOGLE_MAP_API
-    - REDIS_HOST
-    - REDIS_PORT
 
 provider:
   name: aws
