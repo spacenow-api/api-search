@@ -4,15 +4,17 @@ const { DataTypes } = require('sequelize')
 
 const { getInstance } = require('./../helpers/mysql.server')
 
-const Location = require('./../models/location.model')(getInstance(), DataTypes)
-const Listing = require('./../models/listing.model')(getInstance(), DataTypes)
-const ListingData = require('./../models/listingData.model')(getInstance(), DataTypes)
-const ListSettingsParent = require('./../models/listSettingsParent.model')(getInstance(), DataTypes)
-const ListSettings = require('./../models/listSettings.model')(getInstance(), DataTypes)
-const User = require('./../models/user.model')(getInstance(), DataTypes)
-const UserProfile = require('./../models/userProfile.model')(getInstance(), DataTypes)
-const ListingPhotos = require('./../models/listingPhotos.model')(getInstance(), DataTypes)
-const SubcategorySpecifications = require('./../models/subCategorySpecifications.model')(getInstance(), DataTypes)
+const sequelizeInstance = getInstance()
+
+const Location = require('./../models/location.model')(sequelizeInstance, DataTypes)
+const Listing = require('./../models/listing.model')(sequelizeInstance, DataTypes)
+const ListingData = require('./../models/listingData.model')(sequelizeInstance, DataTypes)
+const ListSettingsParent = require('./../models/listSettingsParent.model')(sequelizeInstance, DataTypes)
+const ListSettings = require('./../models/listSettings.model')(sequelizeInstance, DataTypes)
+const User = require('./../models/user.model')(sequelizeInstance, DataTypes)
+const UserProfile = require('./../models/userProfile.model')(sequelizeInstance, DataTypes)
+const ListingPhotos = require('./../models/listingPhotos.model')(sequelizeInstance, DataTypes)
+const SubcategorySpecifications = require('./../models/subCategorySpecifications.model')(sequelizeInstance, DataTypes)
 
 module.exports = {
   Location,

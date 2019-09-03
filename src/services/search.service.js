@@ -33,9 +33,7 @@ function cacheStore(latlng, salt, listings) {
 function getLatLngObj(latlng) {
   const latAndLng = latlng && latlng.split(',')
   if (!latlng || !latAndLng || latAndLng.length <= 0)
-    throw new Error(
-      'Latitude or longitude are missing to call Google Maps API.'
-    )
+    throw new Error('Latitude or longitude are missing to call Google Maps API.')
   return {
     lat: latAndLng[0],
     lng: latAndLng[1]
@@ -44,13 +42,7 @@ function getLatLngObj(latlng) {
 
 async function searchListingIds(latlng) {
   const latlngObj = getLatLngObj(latlng)
-  console.log('searchListingIds -> latlng', latlngObj)
-  const listingsForTest = await Listing.findAll();
-  console.log('searchListingIds -> listingsForTest', listingsForTest)
-  const queryResults = await mysqlInstance().query(
-    `SELECT * FROM Location WHERE ACOS(SIN(RADIANS(lat)) * SIN(RADIANS(${latlngObj.lat})) + COS(RADIANS(lat)) * COS(RADIANS(${latlngObj.lat})) * COS(RADIANS(lng) - RADIANS(${latlngObj.lng}))) * 6380 < 10`
-  )
-  console.log('searchListingIds -> queryResults', queryResults)
+  const queryResults = await mysqlInstance().query(`SELECT * FROM Location WHERE ACOS(SIN(RADIANS(lat)) * SIN(RADIANS(${latlngObj.lat})) + COS(RADIANS(lat)) * COS(RADIANS(${latlngObj.lat})) * COS(RADIANS(lng) - RADIANS(${latlngObj.lng}))) * 6380 < 10`)
   let locations = []
   let locationIds = []
   if (queryResults) {
@@ -161,38 +153,28 @@ async function searchQuery(searchKey, filters) {
         .split(',')
         .map((o) => parseInt(o, 10))
       if (categoryIds.length > 0) {
-        filteredResult = filteredResult.filter((o) =>
-          categoryIds.includes(o.category.id)
-        )
+        filteredResult = filteredResult.filter((o) => categoryIds.includes(o.category.id))
       }
     }
     // Check duration...
     if (filters.duration) {
       const durationTypes = filters.duration.split(',')
       if (durationTypes.length > 0) {
-        filteredResult = filteredResult.filter((o) =>
-          durationTypes.includes(o.bookingPeriod)
-        )
+        filteredResult = filteredResult.filter((o) => durationTypes.includes(o.bookingPeriod))
       }
     }
     // Check minimum price...
     if (filters.priceMin && filters.priceMin > 0) {
-      filteredResult = filteredResult.filter(
-        (o) => o.listingData.basePrice >= filters.priceMin
-      )
+      filteredResult = filteredResult.filter((o) => o.listingData.basePrice >= filters.priceMin)
     }
     // Check maximun price...
     if (filters.priceMax && filters.priceMax > 0) {
-      filteredResult = filteredResult.filter(
-        (o) => o.listingData.basePrice <= filters.priceMax
-      )
+      filteredResult = filteredResult.filter((o) => o.listingData.basePrice <= filters.priceMax)
     }
     // Check instant booking...
     if (filters.instant) {
       const boolValue = /true/i.test(filters.instant)
-      filteredResult = filteredResult.filter(
-        (o) => (o.listingData.bookingType === 'instant') === boolValue
-      )
+      filteredResult = filteredResult.filter((o) => (o.listingData.bookingType === 'instant') === boolValue)
     }
   }
   return { status: 'OK', searchKey, result: filteredResult }
