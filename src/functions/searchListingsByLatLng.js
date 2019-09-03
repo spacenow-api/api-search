@@ -24,9 +24,14 @@ module.exports.main = async (event, context, callback) => {
     logging: console.log
   })
   console.info('Sequelize instance ->', instance)
-  const Location = require('./../models/location.model')(instance, DataTypes)
-  console.log('Location instance ->', Location)
-  const locations = await Location.findAll()
-  console.log('Locations ->', locations)
-  callback(null, r.success({ status: 'OK' }))
+  // const Location = require('./../models/location.model')(instance, DataTypes)
+  // console.log('Location instance ->', Location)
+  // const locations = await Location.findAll()
+  // console.log('Locations ->', locations)
+  try {
+    await instance.authenticate()
+    callback(null, r.success({ status: 'OK' }))
+  } catch (err) {
+    callback(null, r.failure(err))
+  }
 }
