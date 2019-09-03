@@ -39,11 +39,11 @@ provider:
   region: ap-southeast-2
   vpc:
     securityGroupIds:
-      - sg-023a87693eb953c7b
+      - sg-0c2c8c0098706af84
     subnetIds:
-      - subnet-00c0a62fa0947f5ac
-      - subnet-0203e559842315443
-      - subnet-0745077371b623d52
+      - subnet-0c75bbd1ea60481d4
+      - subnet-070ac699acd775765
+      - subnet-0eca793083726120c
   environment:
     DATABASE_SCHEMA: ${ssm:/${opt:stageCert, 'SANDPIT'}/SPACENOW/DATABASE_SCHEMA~true}
     DATABASE_HOST: ${ssm:/${opt:stageCert, 'SANDPIT'}/SPACENOW/DATABASE_HOST~true}

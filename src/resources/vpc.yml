@@ -11,4 +11,8 @@ Resources:
           - Effect: Allow
             Action:
               - 'rds:*'
+              - ec2:CreateNetworkInterface
+              - ec2:DescribeNetworkInterfaces
+              - ec2:DetachNetworkInterface
+              - ec2:DeleteNetworkInterface
             Resource: '*'
