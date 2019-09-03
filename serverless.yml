@@ -7,13 +7,6 @@ plugins:
   - serverless-prune-plugin
 
 custom:
-  DATABASE_SCHEMA: ${ssm:/${opt:stageCert, 'SANDPIT'}/SPACENOW/DATABASE_SCHEMA}
-  DATABASE_HOST: ${ssm:/${opt:stageCert, 'SANDPIT'}/SPACENOW/DATABASE_HOST}
-  DATABASE_USERNAME: ${ssm:/${opt:stageCert, 'SANDPIT'}/SPACENOW/DATABASE_USERNAME}
-  DATABASE_PASSWORD: ${ssm:/${opt:stageCert, 'SANDPIT'}/SPACENOW/DATABASE_PASSWORD}
-  GOOGLE_MAP_API: ${ssm:/${opt:stageCert, 'SANDPIT'}/SPACENOW/GOOGLE_MAP_API}
-  REDIS_HOST: ${ssm:/${opt:stageCert, 'SANDPIT'}/SPACENOW/REDIS_HOST}
-  REDIS_PORT: ${ssm:/${opt:stageCert, 'SANDPIT'}/SPACENOW/REDIS_PORT}
   domains:
     default: ${self:service}.${opt:stage, 'sandpit'}.cloud.spacenow.com
     prod: ${self:service}.spacenow.com
@@ -33,6 +26,14 @@ provider:
   runtime: nodejs10.x
   stage: ${opt:stage, 'sandpit'}
   region: ap-southeast-2
+  environment:
+    DATABASE_SCHEMA: ${ssm:/${opt:stageCert, 'SANDPIT'}/SPACENOW/DATABASE_SCHEMA}
+    DATABASE_HOST: ${ssm:/${opt:stageCert, 'SANDPIT'}/SPACENOW/DATABASE_HOST}
+    DATABASE_USERNAME: ${ssm:/${opt:stageCert, 'SANDPIT'}/SPACENOW/DATABASE_USERNAME}
+    DATABASE_PASSWORD: ${ssm:/${opt:stageCert, 'SANDPIT'}/SPACENOW/DATABASE_PASSWORD}
+    GOOGLE_MAP_API: ${ssm:/${opt:stageCert, 'SANDPIT'}/SPACENOW/GOOGLE_MAP_API}
+    REDIS_HOST: ${ssm:/${opt:stageCert, 'SANDPIT'}/SPACENOW/REDIS_HOST}
+    REDIS_PORT: ${ssm:/${opt:stageCert, 'SANDPIT'}/SPACENOW/REDIS_PORT}
 
 functions:
   searchListingsByLatLng:
