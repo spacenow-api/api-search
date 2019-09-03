@@ -1,6 +1,7 @@
 'use strict'
 
 const Sequelize = require('sequelize')
+const { DataTypes } = require('sequelize')
 
 const r = require('./../helpers/response.utils')
 // const searchService = require('./../services/search.service')
@@ -13,7 +14,7 @@ const r = require('./../helpers/response.utils')
 //     .catch((err) => callback(null, r.failure(err)))
 // }
 
-module.exports.main = (event, context, callback) => {
+module.exports.main = async (event, context, callback) => {
   const instance = new Sequelize({
     dialect: 'mysql',
     host: process.env.DATABASE_HOST,
@@ -23,5 +24,8 @@ module.exports.main = (event, context, callback) => {
     logging: true
   })
   console.info(instance)
+  const Location = require('./../models/location.model')(instance, DataTypes)
+  const locations = await Location.findAll()
+  console.log('Locations ->', locations)
   callback(null, r.success({ status: 'OK' }))
 }
