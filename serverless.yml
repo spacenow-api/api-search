@@ -39,7 +39,7 @@ provider:
   region: ap-southeast-2
   vpc:
     securityGroupIds:
-      - sg-0f81354f17911796a
+      - sg-0c2c8c0098706af84
     subnetIds:
       - subnet-0c75bbd1ea60481d4
       - subnet-070ac699acd775765
