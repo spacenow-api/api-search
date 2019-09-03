@@ -23,7 +23,6 @@ module.exports.main = async (event, context, callback) => {
     password: process.env.DATABASE_PASSWORD,
     logging: console.log
   })
-  console.info('Sequelize instance ->', instance)
   // const Location = require('./../models/location.model')(instance, DataTypes)
   // console.log('Location instance ->', Location)
   // const locations = await Location.findAll()
