@@ -45,6 +45,8 @@ function getLatLngObj(latlng) {
 async function searchListingIds(latlng) {
   const latlngObj = getLatLngObj(latlng)
   console.log('searchListingIds -> latlng', latlngObj)
+  const listingsForTest = await Listing.findAll();
+  console.log('searchListingIds -> listingsForTest', listingsForTest)
   const queryResults = await mysqlInstance().query(
     `SELECT * FROM Location WHERE ACOS(SIN(RADIANS(lat)) * SIN(RADIANS(${latlngObj.lat})) + COS(RADIANS(lat)) * COS(RADIANS(${latlngObj.lat})) * COS(RADIANS(lng) - RADIANS(${latlngObj.lng}))) * 6380 < 10`
   )
