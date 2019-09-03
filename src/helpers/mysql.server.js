@@ -7,6 +7,7 @@ let sequelize = null
 function initInstance() {
   if (!sequelize) {
     console.info('Initializing Sequelize connection.')
+    console.info('Variables: ', process.env)
     sequelize = new Sequelize({
       dialect: 'mysql',
       host: process.env.DATABASE_HOST,
