@@ -4,11 +4,11 @@ Resources:
     Properties:
       Description: Creating policy for VPC connetion.
       Roles:
-        - { "Ref": "IamRoleLambdaExecution" }
+        - { 'Ref': 'IamRoleLambdaExecution' }
       PolicyDocument:
-        Version: "2012-10-17"
+        Version: '2012-10-17'
         Statement:
           - Effect: Allow
             Action:
-              - "rds:*"
-            Resource: "*"
+              - 'rds:*'
+            Resource: '*'
