@@ -69,4 +69,5 @@ functions:
           cors: true
 
 resources:
+  - ${file(src/resources/vpc.yml)}
   - ${file(src/resources/api-gateway-errors.yml)}
