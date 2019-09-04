@@ -17,6 +17,9 @@ const {
   SubcategorySpecifications
 } = require('./../models')
 
+const sequelize = mysqlInstance()
+const redis = redisInstance()
+
 function getRedisKey(value) {
   return crypto
     .createHash('sha256')
@@ -24,9 +27,9 @@ function getRedisKey(value) {
     .digest('hex')
 }
 
-function cacheStore(latlng, salt, listings) {
+async function cacheStore(latlng, salt, listings) {
   const hashKey = getRedisKey(`${latlng}-${salt}`)
-  redisInstance().set(hashKey, JSON.stringify(listings), 'EX', 86400) // to expire key after 24 hours
+  await redis.set(hashKey, JSON.stringify(listings), 'EX', 86400) // to expire key after 24 hours
   return hashKey
 }
 
@@ -42,7 +45,7 @@ function getLatLngObj(latlng) {
 
 async function searchListingIds(latlng) {
   const latlngObj = getLatLngObj(latlng)
-  const queryResults = await mysqlInstance().query(`SELECT * FROM Location WHERE ACOS(SIN(RADIANS(lat)) * SIN(RADIANS(${latlngObj.lat})) + COS(RADIANS(lat)) * COS(RADIANS(${latlngObj.lat})) * COS(RADIANS(lng) - RADIANS(${latlngObj.lng}))) * 6380 < 10`)
+  const queryResults = await sequelize.query(`SELECT * FROM Location WHERE ACOS(SIN(RADIANS(lat)) * SIN(RADIANS(${latlngObj.lat})) + COS(RADIANS(lat)) * COS(RADIANS(${latlngObj.lat})) * COS(RADIANS(lng) - RADIANS(${latlngObj.lng}))) * 6380 < 10`)
   let locations = []
   let locationIds = []
   if (queryResults) {
@@ -67,7 +70,7 @@ async function searchListingIds(latlng) {
     }
   })
   const listingsResult = await fillListings(listings, locations)
-  const searchKey = cacheStore(latlng, Date.now(), listingsResult)
+  const searchKey = await cacheStore(latlng, Date.now(), listingsResult)
   return { searchKey, listings: listingsResult }
 }
 
@@ -143,7 +146,7 @@ async function fillListings(listings, locations) {
 }
 
 async function searchQuery(searchKey, filters) {
-  const listingData = await redisInstance().get(searchKey)
+  const listingData = await redis.get(searchKey)
   if (!listingData) return { status: 'empty' }
   let filteredResult = JSON.parse(listingData)
   if (filters) {
