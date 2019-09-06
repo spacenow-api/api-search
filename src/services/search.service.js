@@ -20,6 +20,8 @@ const {
 const sequelize = mysqlInstance()
 const redis = redisInstance()
 
+const PAGINATION_LIMIT = 10
+
 function getRedisKey(value) {
   return crypto
     .createHash('sha256')
@@ -71,7 +73,8 @@ async function searchListingIds(latlng) {
   })
   const listingsResult = await fillListings(listings, locations)
   const searchKey = await cacheStore(latlng, Date.now(), listingsResult)
-  return { searchKey, listings: listingsResult }
+  const dataPaginated = getPaginator(listingsResult)
+  return { status: 'OK', searchKey, ...dataPaginated }
 }
 
 async function fillListings(listings, locations) {
@@ -142,6 +145,23 @@ async function fillListings(listings, locations) {
     return searchResults
   } catch (err) {
     throw new Error(err)
+  }
+}
+
+function getPaginator(content, toPage) {
+  const items = content || []
+  const page = toPage || 1
+  const offset = (page - 1) * PAGINATION_LIMIT
+  const paginatedItems = items.slice(offset).slice(0, PAGINATION_LIMIT)
+  const totalPages = Math.ceil(items.length / PAGINATION_LIMIT)
+  return {
+    page: page,
+    perPage: PAGINATION_LIMIT,
+    prePage: page - 1 ? page - 1 : null,
+    nextPage: (totalPages > page) ? page + 1 : null,
+    total: items.length,
+    totalPages: totalPages,
+    result: paginatedItems
   }
 }
 
