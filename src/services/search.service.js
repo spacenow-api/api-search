@@ -167,7 +167,7 @@ function getPaginator(content, toPage) {
 
 async function searchQuery(searchKey, filters) {
   const listingData = await redis.get(searchKey)
-  if (!listingData) return { status: 'empty' }
+  if (!listingData) return { status: 'EMPTY' }
   let filteredResult = JSON.parse(listingData)
   if (filters) {
     // Check categories...
@@ -200,7 +200,8 @@ async function searchQuery(searchKey, filters) {
       filteredResult = filteredResult.filter((o) => (o.listingData.bookingType === 'instant') === boolValue)
     }
   }
-  return { status: 'OK', searchKey, result: filteredResult }
+  const dataPaginated = getPaginator(filteredResult, filters.page)
+  return { status: 'OK', searchKey, ...dataPaginated }
 }
 
 module.exports = { searchListingIds, searchQuery }
