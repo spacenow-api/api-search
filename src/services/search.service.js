@@ -47,7 +47,13 @@ function getLatLngObj(latlng) {
 
 async function searchListingIds(latlng) {
   const latlngObj = getLatLngObj(latlng)
-  const queryResults = await sequelize.query(`SELECT * FROM Location WHERE ACOS(SIN(RADIANS(lat)) * SIN(RADIANS(${latlngObj.lat})) + COS(RADIANS(lat)) * COS(RADIANS(${latlngObj.lat})) * COS(RADIANS(lng) - RADIANS(${latlngObj.lng}))) * 6380 < 10`)
+  const queryResults = await sequelize.query(`
+    SELECT 
+      id, country, address1, buildingName, city, state, zipcode, lat, lng 
+    FROM Location 
+    WHERE (1=1) 
+      AND ACOS(SIN(RADIANS(lat)) * SIN(RADIANS(${latlngObj.lat})) + COS(RADIANS(lat)) * COS(RADIANS(${latlngObj.lat})) * COS(RADIANS(lng) - RADIANS(${latlngObj.lng}))) * 6380 < 10
+  `)
   let locations = []
   let locationIds = []
   if (queryResults) {
@@ -83,19 +89,35 @@ async function fillListings(listings, locations) {
     for (const listingObj of listings) {
       // Getting listing data...
       const listingData = await ListingData.findOne({
+        attributes: [
+          'id',
+          'basePrice',
+          'currency',
+          'minTerm',
+          'capacity',
+          'size',
+          'meetingRooms',
+          'isFurnished',
+          'carSpace',
+          'sizeOfVehicle',
+          'maxEntranceHeight',
+          'spaceType',
+          'bookingType',
+          'accessType'
+        ],
         where: { listingId: listingObj.id }
       })
 
       // Specifications...
       const specificationsData = await SubcategorySpecifications.findAll({
-        where: { listSettingsParentId: listingObj.listSettingsParentId },
-        raw: true
+        attributes: ['listSettingsSpecificationId'],
+        where: { listSettingsParentId: listingObj.listSettingsParentId }
       })
       const specificationsArray = []
       for (const item of specificationsData) {
         const settingsObj = await ListSettings.findOne({
-          where: { id: item.listSettingsSpecificationId },
-          raw: true
+          attributes: ['id', 'typeId', 'itemName', 'otherItemName', 'specData'],
+          where: { id: item.listSettingsSpecificationId }
         })
         specificationsArray.push(settingsObj)
       }
@@ -105,27 +127,33 @@ async function fillListings(listings, locations) {
 
       // Getting category & sub-category...
       const parentObj = await ListSettingsParent.findOne({
+        attributes: ['listSettingsParentId', 'listSettingsChildId'],
         where: { id: listingObj.listSettingsParentId }
       })
       const categoryObj = await ListSettings.findOne({
+        attributes: ['id', 'typeId', 'itemName', 'otherItemName'],
         where: { id: parentObj.listSettingsParentId }
       })
       const subCategoryObj = await ListSettings.findOne({
+        attributes: ['id', 'typeId', 'itemName', 'otherItemName'],
         where: { id: parentObj.listSettingsChildId }
       })
 
       // Getting photos...
       const photosArray = await ListingPhotos.findAll({
+        attributes: ['id', 'name', 'isCover', 'type'],
         where: { listingId: listingObj.id }
       })
 
       // Getting user host details...
       const hostUser = await User.findOne({
         raw: true,
+        attributes: ['id', 'email'],
         where: { id: listingObj.userId }
       })
       const hostProfile = await UserProfile.findOne({
-        where: { userId: hostUser.id }
+        attributes: ['profileId', 'firstName', 'lastName', 'displayName', 'picture'],
+        where: { userId: listingObj.userId }
       })
 
       searchResults.push({
