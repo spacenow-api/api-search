@@ -59,7 +59,7 @@ functions:
     events:
       - http:
           path: search/listings/{latlng}
-          method: get
+          method: post
           cors: true
   searchQuery:
     handler: src/functions/searchQuery.main
