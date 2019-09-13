@@ -45,7 +45,7 @@ function getLatLngObj(latlng) {
   }
 }
 
-async function searchListingIds(latlng) {
+async function searchListingIds(latlng, filters) {
   const latlngObj = getLatLngObj(latlng)
   const queryResults = await sequelize.query(`
     SELECT 
@@ -79,8 +79,7 @@ async function searchListingIds(latlng) {
   })
   const listingsResult = await fillListings(listings, locations)
   const searchKey = await cacheStore(latlng, Date.now(), listingsResult)
-  const dataPaginated = getPaginator(listingsResult)
-  return { status: 'OK', searchKey, ...dataPaginated }
+  return searchQuery(searchKey, filters)
 }
 
 async function fillListings(listings, locations) {
