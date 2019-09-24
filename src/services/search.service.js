@@ -53,6 +53,7 @@ async function searchListingIds(latlng, filters) {
     FROM Location 
     WHERE (1=1) 
       AND ACOS(SIN(RADIANS(lat)) * SIN(RADIANS(${latlngObj.lat})) + COS(RADIANS(lat)) * COS(RADIANS(${latlngObj.lat})) * COS(RADIANS(lng) - RADIANS(${latlngObj.lng}))) * 6380 < 10
+    ORDER BY lat AND lng
   `)
   let locations = []
   let locationIds = []
