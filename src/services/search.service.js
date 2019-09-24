@@ -63,8 +63,7 @@ async function searchListingIds(latlng, filters) {
   }
   let listings = []
 
-  await queryResults[0].map(async (location, index) => {
-    console.log("Index", index)
+  for (const location of queryResults[0]) {
     const listing = await Listing.findOne({
       where: {
         locationId: location.id,
@@ -73,8 +72,23 @@ async function searchListingIds(latlng, filters) {
         status: 'active'
       }
     })
-    listings[index] = listing
-  })
+    if (listing)
+      listings.push(listing.dataValues)
+  }
+
+  // await queryResults[0].map(async (location, index) => {
+  //   const listing = await Listing.findOne({
+  //     where: {
+  //       locationId: location.id,
+  //       isReady: true,
+  //       isPublished: true,
+  //       status: 'active'
+  //     }
+  //   })
+  //   if (listing)
+  //     listings[index] = listing.dataValues
+  // })
+  // console.log("Listing One", listings)
 
   // const listings = await Listing.findAll({
   //   raw: true,
@@ -93,6 +107,7 @@ async function searchListingIds(latlng, filters) {
   //     status: 'active'
   //   }
   // })
+  // console.log("Listings", listings)
   const listingsResult = await fillListings(listings, locations)
   const searchKey = await cacheStore(latlng, Date.now(), listingsResult)
   return searchQuery(searchKey, filters)
