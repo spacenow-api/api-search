@@ -1,6 +1,6 @@
 'use strict'
 
-const { Op } = require('sequelize')
+// const { Op } = require('sequelize')
 const crypto = require('crypto')
 
 const { getInstance: mysqlInstance } = require('./../helpers/mysql.server')
@@ -56,38 +56,43 @@ async function searchListingIds(latlng, filters) {
     ORDER BY ACOS(SIN(RADIANS(lat)) * SIN(RADIANS(${latlngObj.lat})) + COS(RADIANS(lat)) * COS(RADIANS(${latlngObj.lat})) * COS(RADIANS(lng) - RADIANS(${latlngObj.lng}))) * 6380
   `)
   let locations = []
-  let locationIds = []
+  // let locationIds = []
   if (queryResults) {
     locations = queryResults[0]
-    locationIds = locations.map((o) => o.id)
+    // locationIds = locations.map((o) => o.id)
   }
-  const listings = await Listing.findAll({
-    raw: true,
-    attributes: [
-      'id',
-      'title',
-      'userId',
-      'locationId',
-      'bookingPeriod',
-      'listSettingsParentId'
-    ],
-    includes: [
-      {
-        model: Location,
-        as: "location",
-        attributes: ["id", "country", "city", "state", "address1", "buildingName", "zipcode", "lat", "lng"]
+  let listings = []
+
+  await queryResults[0].map(async (location, index) => {
+    console.log("Index", index)
+    const listing = await Listing.findOne({
+      where: {
+        locationId: location.id,
+        isReady: true,
+        isPublished: true,
+        status: 'active'
       }
-    ],
-    where: {
-      locationId: { [Op.in]: locationIds },
-      isReady: true,
-      isPublished: true,
-      status: 'active'
-    },
-    oder: [
-      locationId
-    ]
+    })
+    listings[index] = listing
   })
+
+  // const listings = await Listing.findAll({
+  //   raw: true,
+  //   attributes: [
+  //     'id',
+  //     'title',
+  //     'userId',
+  //     'locationId',
+  //     'bookingPeriod',
+  //     'listSettingsParentId'
+  //   ],
+  //   where: {
+  //     locationId: { [Op.in]: locationIds },
+  //     isReady: true,
+  //     isPublished: true,
+  //     status: 'active'
+  //   }
+  // })
   const listingsResult = await fillListings(listings, locations)
   const searchKey = await cacheStore(latlng, Date.now(), listingsResult)
   return searchQuery(searchKey, filters)
