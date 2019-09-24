@@ -56,11 +56,9 @@ async function searchListingIds(latlng, filters) {
     ORDER BY ACOS(SIN(RADIANS(lat)) * SIN(RADIANS(${latlngObj.lat})) + COS(RADIANS(lat)) * COS(RADIANS(${latlngObj.lat})) * COS(RADIANS(lng) - RADIANS(${latlngObj.lng}))) * 6380
   `)
   let locations = []
-  // let locationIds = []
-  if (queryResults) {
+  if (queryResults)
     locations = queryResults[0]
-    // locationIds = locations.map((o) => o.id)
-  }
+
   let listings = []
 
   for (const location of queryResults[0]) {
@@ -76,38 +74,6 @@ async function searchListingIds(latlng, filters) {
       listings.push(listing.dataValues)
   }
 
-  // await queryResults[0].map(async (location, index) => {
-  //   const listing = await Listing.findOne({
-  //     where: {
-  //       locationId: location.id,
-  //       isReady: true,
-  //       isPublished: true,
-  //       status: 'active'
-  //     }
-  //   })
-  //   if (listing)
-  //     listings[index] = listing.dataValues
-  // })
-  // console.log("Listing One", listings)
-
-  // const listings = await Listing.findAll({
-  //   raw: true,
-  //   attributes: [
-  //     'id',
-  //     'title',
-  //     'userId',
-  //     'locationId',
-  //     'bookingPeriod',
-  //     'listSettingsParentId'
-  //   ],
-  //   where: {
-  //     locationId: { [Op.in]: locationIds },
-  //     isReady: true,
-  //     isPublished: true,
-  //     status: 'active'
-  //   }
-  // })
-  // console.log("Listings", listings)
   const listingsResult = await fillListings(listings, locations)
   const searchKey = await cacheStore(latlng, Date.now(), listingsResult)
   return searchQuery(searchKey, filters)
