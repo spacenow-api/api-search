@@ -71,12 +71,22 @@ async function searchListingIds(latlng, filters) {
       'bookingPeriod',
       'listSettingsParentId'
     ],
+    includes: [
+      {
+        model: Location,
+        as: "location",
+        attributes: ["id", "country", "city", "state", "address1", "buildingName", "zipcode", "lat", "lng"]
+      }
+    ],
     where: {
       locationId: { [Op.in]: locationIds },
       isReady: true,
       isPublished: true,
       status: 'active'
-    }
+    },
+    oder: [
+      locationId
+    ]
   })
   const listingsResult = await fillListings(listings, locations)
   const searchKey = await cacheStore(latlng, Date.now(), listingsResult)
