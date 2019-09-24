@@ -59,10 +59,10 @@ async function searchListingIds(latlng, filters) {
   if (queryResults)
     locations = queryResults[0]
 
-  let listings = []
+  let listingsObj = []
 
   for (const location of queryResults[0]) {
-    const listing = await Listing.findOne({
+    const listings = await Listing.findAndCountAll({
       where: {
         locationId: location.id,
         isReady: true,
@@ -70,11 +70,12 @@ async function searchListingIds(latlng, filters) {
         status: 'active'
       }
     })
-    if (listing)
-      listings.push(listing.dataValues)
+    if (listings.count > 0)
+      for (const listing of listings.rows)
+        listingsObj.push(listing.dataValues)
   }
 
-  const listingsResult = await fillListings(listings, locations)
+  const listingsResult = await fillListings(listingsObj, locations)
   const searchKey = await cacheStore(latlng, Date.now(), listingsResult)
   return searchQuery(searchKey, filters)
 }
