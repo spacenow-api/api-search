@@ -10,7 +10,8 @@ function initInstance() {
     redis = new Redis({
       host: process.env.REDIS_HOST,
       port: 6379,
-      connectTimeout: 10000
+      connectTimeout: 10000,
+      reconnectOnError: function () { return true }
     })
   }
 }
