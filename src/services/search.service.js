@@ -77,7 +77,7 @@ async function searchListingIds(latlng, filters) {
       isPublished: true,
       status: 'active'
     },
-    order: sequelize.literal("FIELD(locationId, " + locationIds.join(',') + ")")
+    order: sequelize.literal(`FIELD(locationId, ${locationIds.join(',')})`)
   })
   const listingsResult = await fillListings(listings, locations)
   const searchKey = await cacheStore(latlng, Date.now(), listingsResult)
@@ -153,7 +153,13 @@ async function fillListings(listings, locations) {
         where: { id: listingObj.userId }
       })
       const hostProfile = await UserProfile.findOne({
-        attributes: ['profileId', 'firstName', 'lastName', 'displayName', 'picture'],
+        attributes: [
+          'profileId',
+          'firstName',
+          'lastName',
+          'displayName',
+          'picture'
+        ],
         where: { userId: listingObj.userId }
       })
 
@@ -187,7 +193,7 @@ function getPaginator(content, toPage) {
     page: page,
     perPage: PAGINATION_LIMIT,
     prePage: page - 1 ? page - 1 : null,
-    nextPage: (totalPages > page) ? page + 1 : null,
+    nextPage: totalPages > page ? page + 1 : null,
     total: items.length,
     totalPages: totalPages,
     result: paginatedItems
@@ -205,28 +211,38 @@ async function searchQuery(searchKey, filters) {
         .split(',')
         .map((o) => parseInt(o, 10))
       if (categoryIds.length > 0) {
-        filteredResult = filteredResult.filter((o) => categoryIds.includes(o.category.id))
+        filteredResult = filteredResult.filter((o) =>
+          categoryIds.includes(o.category.id)
+        )
       }
     }
     // Check duration...
     if (filters.duration) {
       const durationTypes = filters.duration.split(',')
       if (durationTypes.length > 0) {
-        filteredResult = filteredResult.filter((o) => durationTypes.includes(o.bookingPeriod))
+        filteredResult = filteredResult.filter((o) =>
+          durationTypes.includes(o.bookingPeriod)
+        )
       }
     }
     // Check minimum price...
     if (filters.priceMin && filters.priceMin > 0) {
-      filteredResult = filteredResult.filter((o) => o.listingData.basePrice >= filters.priceMin)
+      filteredResult = filteredResult.filter(
+        (o) => o.listingData.basePrice >= filters.priceMin
+      )
     }
     // Check maximun price...
     if (filters.priceMax && filters.priceMax > 0) {
-      filteredResult = filteredResult.filter((o) => o.listingData.basePrice <= filters.priceMax)
+      filteredResult = filteredResult.filter(
+        (o) => o.listingData.basePrice <= filters.priceMax
+      )
     }
     // Check instant booking...
     if (filters.instant) {
       const boolValue = /true/i.test(filters.instant)
-      filteredResult = filteredResult.filter((o) => (o.listingData.bookingType === 'instant') === boolValue)
+      filteredResult = filteredResult.filter(
+        (o) => (o.listingData.bookingType === 'instant') === boolValue
+      )
     }
   }
   const dataPaginated = getPaginator(filteredResult, filters.page)
