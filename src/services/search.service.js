@@ -1,6 +1,6 @@
 'use strict'
 
-// const { Op } = require('sequelize')
+const { Op } = require('sequelize')
 const crypto = require('crypto')
 
 const { getInstance: mysqlInstance } = require('./../helpers/mysql.server')
@@ -46,8 +46,6 @@ function getLatLngObj(latlng) {
 }
 
 async function searchListingIds(latlng, filters) {
-  console.log('searchListingIds', latlng, filters)
-
   const latlngObj = getLatLngObj(latlng)
   const queryResults = await sequelize.query(`
     SELECT 
@@ -57,35 +55,36 @@ async function searchListingIds(latlng, filters) {
       AND ACOS(SIN(RADIANS(lat)) * SIN(RADIANS(${latlngObj.lat})) + COS(RADIANS(lat)) * COS(RADIANS(${latlngObj.lat})) * COS(RADIANS(lng) - RADIANS(${latlngObj.lng}))) * 6380 < 10
     ORDER BY ACOS(SIN(RADIANS(lat)) * SIN(RADIANS(${latlngObj.lat})) + COS(RADIANS(lat)) * COS(RADIANS(${latlngObj.lat})) * COS(RADIANS(lng) - RADIANS(${latlngObj.lng}))) * 6380
   `)
-
   let locations = []
-  if (queryResults)
+  let locationIds = []
+  if (queryResults) {
     locations = queryResults[0]
-  console.log('Locations found: ', locations)
-
-  let listingsObj = []
-  for (const location of locations) {
-    const listings = await Listing.findAndCountAll({
-      where: {
-        locationId: location.id,
-        isReady: true,
-        isPublished: true,
-        status: 'active'
-      }
-    })
-    console.log('Listings found: ', listings)
-    if (listings.count > 0)
-      for (const listing of listings.rows)
-        listingsObj.push(listing.dataValues)
+    locationIds = locations.map((o) => o.id)
   }
-
-  const listingsResult = await fillListings(listingsObj, locations)
+  const listings = await Listing.findAll({
+    raw: true,
+    attributes: [
+      'id',
+      'title',
+      'userId',
+      'locationId',
+      'bookingPeriod',
+      'listSettingsParentId'
+    ],
+    where: {
+      locationId: { [Op.in]: locationIds },
+      isReady: true,
+      isPublished: true,
+      status: 'active'
+    },
+    order: sequelize.literal("FIELD(locationId, " + locationIds.join(',') + ")")
+  })
+  const listingsResult = await fillListings(listings, locations)
   const searchKey = await cacheStore(latlng, Date.now(), listingsResult)
   return searchQuery(searchKey, filters)
 }
 
 async function fillListings(listings, locations) {
-  console.log('fillListings', listings, locations)
   try {
     const searchResults = []
     for (const listingObj of listings) {
