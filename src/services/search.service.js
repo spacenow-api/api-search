@@ -20,7 +20,7 @@ const {
 const sequelize = mysqlInstance()
 const redis = redisInstance()
 
-const PAGINATION_LIMIT = 10
+const PAGINATION_LIMIT = 12
 
 function getRedisKey(value) {
   return crypto
