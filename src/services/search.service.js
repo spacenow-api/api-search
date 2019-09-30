@@ -20,7 +20,8 @@ const {
 const sequelize = mysqlInstance()
 const redis = redisInstance()
 
-const PAGINATION_LIMIT = 12
+const RADIUS_DEFAULT = 10
+const PAGINATION_LIMIT_DEFAULT = 12
 
 function getRedisKey(value) {
   return crypto
@@ -46,13 +47,15 @@ function getLatLngObj(latlng) {
 }
 
 async function searchListingIds(latlng, filters) {
+  let byRadius = filters && filters.radius || RADIUS_DEFAULT
+  byRadius = byRadius <= 0 ? `` : `< ${byRadius}`
   const latlngObj = getLatLngObj(latlng)
   const queryResults = await sequelize.query(`
     SELECT 
       id, country, address1, buildingName, city, state, zipcode, lat, lng 
     FROM Location 
     WHERE (1=1) 
-      AND ACOS(SIN(RADIANS(lat)) * SIN(RADIANS(${latlngObj.lat})) + COS(RADIANS(lat)) * COS(RADIANS(${latlngObj.lat})) * COS(RADIANS(lng) - RADIANS(${latlngObj.lng}))) * 6380 < 10
+      AND ACOS(SIN(RADIANS(lat)) * SIN(RADIANS(${latlngObj.lat})) + COS(RADIANS(lat)) * COS(RADIANS(${latlngObj.lat})) * COS(RADIANS(lng) - RADIANS(${latlngObj.lng}))) * 6380 ${byRadius}
     ORDER BY ACOS(SIN(RADIANS(lat)) * SIN(RADIANS(${latlngObj.lat})) + COS(RADIANS(lat)) * COS(RADIANS(${latlngObj.lat})) * COS(RADIANS(lng) - RADIANS(${latlngObj.lng}))) * 6380
   `)
   let locations = []
@@ -183,15 +186,16 @@ async function fillListings(listings, locations) {
   }
 }
 
-function getPaginator(content, toPage) {
+function getPaginator(content, toPage, byLimit) {
   const items = content || []
   const page = toPage || 1
-  const offset = (page - 1) * PAGINATION_LIMIT
-  const paginatedItems = items.slice(offset).slice(0, PAGINATION_LIMIT)
-  const totalPages = Math.ceil(items.length / PAGINATION_LIMIT)
+  const limit = byLimit || PAGINATION_LIMIT_DEFAULT
+  const offset = (page - 1) * limit
+  const paginatedItems = items.slice(offset).slice(0, limit)
+  const totalPages = Math.ceil(items.length / limit)
   return {
     page: page,
-    perPage: PAGINATION_LIMIT,
+    perPage: limit,
     prePage: page - 1 ? page - 1 : null,
     nextPage: totalPages > page ? page + 1 : null,
     total: items.length,
@@ -245,7 +249,7 @@ async function searchQuery(searchKey, filters) {
       )
     }
   }
-  const dataPaginated = getPaginator(filteredResult, filters.page)
+  const dataPaginated = getPaginator(filteredResult, filters.page, filters.limit)
   return { status: 'OK', searchKey, ...dataPaginated }
 }
 
