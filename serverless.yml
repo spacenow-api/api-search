@@ -48,6 +48,7 @@ provider:
   name: aws
   runtime: nodejs10.x
   timeout: 20
+  versionFunctions: false
   stage: ${opt:stage, 'sandpit'}
   region: ap-southeast-2
   vpc:
@@ -68,6 +69,7 @@ provider:
 functions:
   searchListingsByLatLng:
     handler: src/functions/searchListingsByLatLng.main
+    memorySize: 2048
     events:
       - http:
           path: search/listings/{latlng}
@@ -75,6 +77,7 @@ functions:
           cors: true
   searchQuery:
     handler: src/functions/searchQuery.main
+    memorySize: 2048
     events:
       - http:
           path: search/{key}/query
