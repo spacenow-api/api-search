@@ -1,25 +1,9 @@
 'use strict'
 
 const { Op } = require('sequelize')
-const crypto = require('crypto')
 const moment = require('moment')
 
-const { getInstance: mysqlInstance } = require('./../helpers/mysql.server')
-const { getInstance: redisInstance } = require('./../helpers/redis.server')
-
-const {
-  Listing,
-  ListingData,
-  ListSettingsParent,
-  ListSettings,
-  ListingPhotos,
-  User,
-  UserProfile,
-  SubcategorySpecifications,
-  Availabilities
-} = require('./../models')
-
-const sequelize = mysqlInstance()
+const { Availabilities } = require('./../models')
 
 function mapReservations(availability) {
   const reservationsString = availability.blockedDates
@@ -27,27 +11,6 @@ function mapReservations(availability) {
   if (reservationsString)
     availability.blockedDates = reservationsString.split(',')
   return availability
-}
-
-function hasBlockAvailabilities(bookings, reservationDates) {
-  try {
-    let reservationsFromBooking = bookings.map((o) => o.reservations)
-    reservationsFromBooking = [].concat.apply([], reservationsFromBooking)
-    const similars = []
-    reservationsFromBooking.forEach((fromBooking) => {
-      reservationDates.forEach((toCreate) => {
-        if (moment(fromBooking).isSame(toCreate, 'day')) {
-          if (similars.indexOf(toCreate) === -1) {
-            similars.push(toCreate)
-          }
-        }
-      })
-    })
-    return similars.length > 0
-  } catch (err) {
-    console.error(err)
-    return true // to block reservations if has a error...
-  }
 }
 
 function isListingFreeForBooking(blockedDates, datesSelected) {
