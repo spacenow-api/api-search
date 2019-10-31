@@ -5,6 +5,7 @@ const crypto = require('crypto')
 
 const { getInstance: mysqlInstance } = require('./../helpers/mysql.server')
 const { getInstance: redisInstance } = require('./../helpers/redis.server')
+const { filterOnlyFree } = require('./availability.service')
 
 const {
   Listing,
@@ -39,7 +40,9 @@ async function cacheStore(latlng, salt, listings) {
 function getLatLngObj(latlng) {
   const latAndLng = latlng && latlng.split(',')
   if (!latlng || !latAndLng || latAndLng.length <= 0)
-    throw new Error('Latitude or longitude are missing to call Google Maps API.')
+    throw new Error(
+      'Latitude or longitude are missing to call Google Maps API.'
+    )
   return {
     lat: latAndLng[0],
     lng: latAndLng[1]
@@ -47,7 +50,7 @@ function getLatLngObj(latlng) {
 }
 
 async function searchListingIds(latlng, filters) {
-  let byRadius = filters && filters.radius || RADIUS_DEFAULT
+  let byRadius = (filters && filters.radius) || RADIUS_DEFAULT
   byRadius = byRadius <= 0 ? `` : `< ${byRadius}`
   const latlngObj = getLatLngObj(latlng)
   const queryResults = await sequelize.query(`
@@ -248,8 +251,19 @@ async function searchQuery(searchKey, filters) {
         (o) => (o.listingData.bookingType === 'instant') === boolValue
       )
     }
+    // Check availability...
+    if (filters.availability && filters.availability.length > 0) {
+      filteredResult = await filterOnlyFree(
+        filteredResult,
+        filters.availability
+      )
+    }
   }
-  const dataPaginated = getPaginator(filteredResult, filters.page, filters.limit)
+  const dataPaginated = getPaginator(
+    filteredResult,
+    filters.page,
+    filters.limit
+  )
   return { status: 'OK', searchKey, ...dataPaginated }
 }
 
