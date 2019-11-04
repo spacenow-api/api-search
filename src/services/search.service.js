@@ -15,7 +15,8 @@ const {
   ListingPhotos,
   User,
   UserProfile,
-  SubcategorySpecifications
+  SubcategorySpecifications,
+  SubcategoryBookingPeriod
 } = require('./../models')
 
 const sequelize = mysqlInstance()
@@ -23,6 +24,7 @@ const redis = redisInstance()
 
 const RADIUS_DEFAULT = 10
 const PAGINATION_LIMIT_DEFAULT = 12
+const PERIODS = ['monthly', 'weekly', 'daily', 'hourly']
 
 function getRedisKey(value) {
   return crypto
@@ -211,6 +213,7 @@ async function searchQuery(searchKey, filters) {
   const listingData = await redis.get(searchKey)
   if (!listingData) return { status: 'EMPTY' }
   let filteredResult = JSON.parse(listingData)
+  let frequencies = PERIODS
   if (filters) {
     // Check categories...
     if (filters.categories) {
@@ -220,6 +223,28 @@ async function searchQuery(searchKey, filters) {
       if (categoryIds.length > 0) {
         filteredResult = filteredResult.filter((o) =>
           categoryIds.includes(o.category.id)
+        )
+        // Removing frequency options based on Category...
+        const parentArray = await ListSettingsParent.findAll({
+          raw: true,
+          attributes: ['id'],
+          where: { listSettingsParentId: { [Op.in]: categoryIds } }
+        })
+        const parentIds = parentArray.map((o) => o.id)
+        const subBookingsPeriod = await SubcategoryBookingPeriod.findAll({
+          where: { listSettingsParentId: { [Op.in]: parentIds } }
+        })
+        frequencies = subBookingsPeriod.map((i) =>
+          PERIODS.filter((p) => i[p] == 1)
+        )
+        frequencies = frequencies.reduce((a, b) => {
+          return a.concat(b)
+        }, [])
+        frequencies = frequencies.filter(
+          (value, index, self) => self.indexOf(value) === index
+        )
+        filteredResult = filteredResult.filter((o) =>
+          frequencies.includes(o.bookingPeriod)
         )
       }
     }
@@ -264,7 +289,7 @@ async function searchQuery(searchKey, filters) {
     filters.page,
     filters.limit
   )
-  return { status: 'OK', searchKey, ...dataPaginated }
+  return { status: 'OK', searchKey, frequencies, ...dataPaginated }
 }
 
 module.exports = { searchListingIds, searchQuery }

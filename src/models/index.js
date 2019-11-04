@@ -16,6 +16,7 @@ const UserProfile = require('./../models/userProfile.model')(sequelize, DataType
 const ListingPhotos = require('./../models/listingPhotos.model')(sequelize, DataTypes)
 const SubcategorySpecifications = require('./../models/subCategorySpecifications.model')(sequelize, DataTypes)
 const Availabilities = require('./../models/availabilities.model')(sequelize, DataTypes)
+const SubcategoryBookingPeriod = require('./../models/subcategoryBookingPeriod.model')(sequelize, DataTypes)
 
 module.exports = {
   Location,
@@ -27,5 +28,6 @@ module.exports = {
   UserProfile,
   ListingPhotos,
   SubcategorySpecifications,
-  Availabilities
+  Availabilities,
+  SubcategoryBookingPeriod
 }
