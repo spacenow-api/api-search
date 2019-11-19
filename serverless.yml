@@ -68,7 +68,7 @@ provider:
 
 functions:
   searchListingsByLatLng:
-    handler: src/functions/searchListingsByLatLng.main
+    handler: src/functions/search/searchListingsByLatLng.main
     memorySize: 2048
     events:
       - http:
@@ -76,7 +76,7 @@ functions:
           method: post
           cors: true
   searchQuery:
-    handler: src/functions/searchQuery.main
+    handler: src/functions/search/searchQuery.main
     memorySize: 2048
     events:
       - http:
