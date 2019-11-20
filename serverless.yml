@@ -103,7 +103,7 @@ functions:
           path: search/images
           method: get
           cors: true
-          # contentHandling: CONVERT_TO_BINARY
+          contentHandling: CONVERT_TO_BINARY
 
 resources:
   - ${file(src/resources/api-gateway-errors.yml)}
