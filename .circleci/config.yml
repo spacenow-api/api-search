@@ -2,7 +2,7 @@ version: 2
 jobs:
   deploy-dev:
     docker:
-      - image: circleci/node:8.10
+      - image: circleci/node:10
 
     working_directory: ~/repo
 
@@ -17,11 +17,9 @@ jobs:
       - run:
           name: Install Serverless CLI and dependencies
           command: |
-            sudo apt-get install awscli
             sudo npm i -g serverless@latest
+            sudo apt-get install awscli
             yarn --force
-            sudo rm -rf node_modules/sharp
-            sudo npm install --arch=x64 --platform=linux --target=10.15.0 sharp
 
       - save_cache:
           paths:
