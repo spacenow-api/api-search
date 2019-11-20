@@ -35,6 +35,8 @@ async function getResizeImage(path, width, height) {
 
 async function resizeAndCache(path, width, height) {
   try {
+    console.log('Redis Flushing...')
+    await redis.flushall()
     let key = '__image__' + path
     if (width && height) {
       key = key + width + height
