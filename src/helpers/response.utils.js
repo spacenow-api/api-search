@@ -23,7 +23,7 @@ module.exports = {
         'Cache-Control': 'private'
       },
       statusCode: 200,
-      body: data,
+      body: data.toString('base64'),
       isBase64Encoded: true
     }
   },

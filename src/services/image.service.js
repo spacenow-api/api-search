@@ -57,7 +57,6 @@ async function resizeAndCache(path, width, height) {
       return resizedBuffer
     }
   } catch (err) {
-    console.error(err)
     throw new Error(err)
   }
 }
