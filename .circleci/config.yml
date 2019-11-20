@@ -19,8 +19,9 @@ jobs:
           command: |
             sudo apt-get install awscli
             sudo npm i -g serverless@latest
-            rm -rf node_modules/sharp
-            npm i
+            sudo npm i -g semver
+            sudo rm -rf node_modules/sharp
+            sudo npm install --arch=x64 --platform=linux --target=10.15.0 sharp
 
       - save_cache:
           paths:
