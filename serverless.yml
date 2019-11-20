@@ -5,8 +5,8 @@ plugins:
   - serverless-dotenv-plugin
   - serverless-domain-manager
   - serverless-prune-plugin
-  - serverless-apigw-binary
-  - serverless-apigwy-binary
+  # - serverless-apigw-binary
+  # - serverless-apigwy-binary
 
 custom:
   domains:
