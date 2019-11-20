@@ -36,9 +36,7 @@ custom:
     number: 5
   apigwBinary:
     types:
-      - 'image/jpeg'
-      - 'image/png'
-      - 'image/webp'
+      - '*/*'
 
 dotenv:
   path: ./.env
@@ -60,9 +58,7 @@ provider:
   region: ap-southeast-2
   apiGateway:
     binaryMediaTypes:
-      - 'image/jpeg'
-      - 'image/png'
-      - 'image/webp'
+      - '*/*'
   vpc:
     securityGroupIds:
       - ${self:custom.securityGroup.${opt:stage, 'sandpit'}}
