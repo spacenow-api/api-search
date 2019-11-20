@@ -17,11 +17,7 @@ module.exports = {
 
   buffer: (data) => {
     return {
-      headers: {
-        ...headers,
-        'Content-Type': 'image/jpeg',
-        'Cache-Control': 'private'
-      },
+      headers,
       statusCode: 200,
       body: data.toString('base64'),
       isBase64Encoded: true
