@@ -58,7 +58,7 @@ provider:
   region: ap-southeast-2
   apiGateway:
     binaryMediaTypes:
-      - 'image/jpeg'
+      - '*/*'
   vpc:
     securityGroupIds:
       - ${self:custom.securityGroup.${opt:stage, 'sandpit'}}
