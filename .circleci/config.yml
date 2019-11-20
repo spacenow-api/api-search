@@ -11,17 +11,15 @@ jobs:
 
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "package-lock.json" }}
+            - v1-dependencies-{{ checksum "yarn.lock" }}
             - v1-dependencies-
 
       - run:
           name: Install Serverless CLI and dependencies
           command: |
-            sudo apt-get install awscli
             sudo npm i -g serverless@latest
-            sudo npm i -g semver
-            sudo rm -rf node_modules/sharp
-            sudo npm install --arch=x64 --platform=linux --target=10.15.0 sharp
+            yarn
+            sudo apt-get install awscli
 
       - save_cache:
           paths:
