@@ -7,7 +7,7 @@ module.exports.main = (event, context, callback) => {
   context.callbackWaitsForEmptyEventLoop = false
   const { path, width, height } = event.queryStringParameters
   imageService
-    .resizeAndCache(path, width, height)
-    .then((data) => callback(null, r.buffer(data)))
+    .searchImagesAndResize(path, width, height)
+    .then((data) => callback(null, r.image(data)))
     .catch((err) => callback(null, r.failure(err)))
 }

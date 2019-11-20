@@ -34,9 +34,9 @@ custom:
   prune:
     automatic: true
     number: 5
-  apigwBinary:
-    types:
-      - 'image/*'
+  # apigwBinary:
+  #   types:
+  #     - 'image/jpeg'
 
 dotenv:
   path: ./.env
@@ -56,9 +56,9 @@ provider:
   versionFunctions: false
   stage: ${opt:stage, 'sandpit'}
   region: ap-southeast-2
-  apiGateway:
-    binaryMediaTypes:
-      - 'image/*'
+  # apiGateway:
+  #   binaryMediaTypes:
+  #     - 'image/jpeg'
   vpc:
     securityGroupIds:
       - ${self:custom.securityGroup.${opt:stage, 'sandpit'}}
@@ -92,14 +92,14 @@ functions:
           method: post
           cors: true
   resizeAndCacheImages:
-    handler: src/functions/images/resizeAndCacheImages.main
+    handler: src/functions/images/searchImages.main
     memorySize: 2048
     events:
       - http:
           path: search/images
           method: get
           cors: true
-          contentHandling: CONVERT_TO_BINARY
+          # contentHandling: CONVERT_TO_BINARY
 
 resources:
   - ${file(src/resources/api-gateway-errors.yml)}
