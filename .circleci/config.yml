@@ -20,6 +20,7 @@ jobs:
             sudo apt-get install awscli
             sudo npm i -g serverless@latest
             yarn
+            yarn add sharp --build-from-source
 
       - save_cache:
           paths:
