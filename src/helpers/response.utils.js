@@ -19,11 +19,11 @@ module.exports = {
     return {
       headers: {
         ...headers,
-        'Content-Type': 'gzip',
+        'Content-Type': 'image/jpeg',
         'Cache-Control': 'private'
       },
       statusCode: 200,
-      body: data.toString('base64'),
+      body: data,
       isBase64Encoded: true
     }
   },

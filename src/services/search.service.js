@@ -35,7 +35,6 @@ function getRedisKey(value) {
 
 async function cacheStore(latlng, salt, listings) {
   const hashKey = getRedisKey(`${latlng}-${salt}`)
-  console.log('cacheStore', hashKey)
   await redis.set(hashKey, JSON.stringify(listings), 'EX', 86400) // to expire key after 24 hours
   return hashKey
 }
@@ -53,7 +52,6 @@ function getLatLngObj(latlng) {
 }
 
 async function searchListingIds(latlng, filters) {
-  console.log('searchListingIds', latlng, filters)
   let byRadius = (filters && filters.radius) || RADIUS_DEFAULT
   byRadius = byRadius <= 0 ? `` : `< ${byRadius}`
   const latlngObj = getLatLngObj(latlng)
@@ -212,7 +210,6 @@ function getPaginator(content, toPage, byLimit) {
 }
 
 async function searchQuery(searchKey, filters) {
-  console.log('searchQuery', searchKey)
   const listingData = await redis.get(searchKey)
   if (!listingData) return { status: 'EMPTY' }
   let filteredResult = JSON.parse(listingData)
