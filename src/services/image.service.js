@@ -18,10 +18,11 @@ function getRedisKey(value) {
     .digest('hex')
 }
 
-async function getResizeImage(path, width = 1024, height = 1024) {
+async function getResizeImage(path, width, height) {
   const fileResponse = await axios({
     url: path,
     method: 'GET',
+    headers: { 'Accept-Encoding': 'br,gzip,deflate' },
     responseType: 'arraybuffer'
   })
   const buffer = Buffer.from(fileResponse.data, 'base64')
