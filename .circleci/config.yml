@@ -9,18 +9,17 @@ jobs:
     steps:
       - checkout
 
-      # - restore_cache:
-      #     keys:
-      #       - v1-dependencies-{{ checksum "yarn.lock" }}
-      #       - v1-dependencies-
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "yarn.lock" }}
+            - v1-dependencies-
 
       - run:
           name: Install Serverless CLI and dependencies
           command: |
             sudo apt-get install awscli
             sudo npm i -g serverless@latest
-            yarn
-            yarn add sharp --build-from-source
+            yarn --force
 
       - save_cache:
           paths:
