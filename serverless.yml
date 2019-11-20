@@ -96,6 +96,7 @@ functions:
     memorySize: 2048
     events:
       - http:
+          path: search/images
           method: get
           cors: true
           contentHandling: CONVERT_TO_BINARY
