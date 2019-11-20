@@ -15,12 +15,27 @@ module.exports = {
     }
   },
 
+  buffer: (data) => {
+    return {
+      headers: {
+        ...headers,
+        'Content-Type': 'gzip',
+        'Cache-Control': 'private'
+      },
+      statusCode: 200,
+      body: data.toString('base64'),
+      isBase64Encoded: true
+    }
+  },
+
   failure: (err) => {
     console.error(err)
     return {
       headers,
       statusCode: 500,
-      body: JSON.stringify({ error: err.message ? err.message : 'Function error not identified.' })
+      body: JSON.stringify({
+        error: err.message ? err.message : 'Function error not identified.'
+      })
     }
   }
 }

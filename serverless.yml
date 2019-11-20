@@ -5,6 +5,8 @@ plugins:
   - serverless-dotenv-plugin
   - serverless-domain-manager
   - serverless-prune-plugin
+  - serverless-apigw-binary
+  - serverless-apigwy-binary
 
 custom:
   domains:
@@ -24,14 +26,17 @@ custom:
     prod: sg-00b4a2172f7e29276
   customDomain:
     domainName: ${self:custom.domains.${opt:stage, 'sandpit'}, self:custom.domains.default}
-    basePath: ""
+    basePath: ''
     stage: ${opt:stage, 'sandpit'}
     certificateArn: ${ssm:/${opt:stageCert, 'SANDPIT'}/ACM_CERTIFICATE}
     createRoute53Record: true
-    endpointType: "regional"
+    endpointType: 'regional'
   prune:
     automatic: true
     number: 5
+  apigwBinary:
+    types:
+      - 'image/jpeg'
 
 dotenv:
   path: ./.env
@@ -51,6 +56,9 @@ provider:
   versionFunctions: false
   stage: ${opt:stage, 'sandpit'}
   region: ap-southeast-2
+  apiGateway:
+    binaryMediaTypes:
+      - '*/*'
   vpc:
     securityGroupIds:
       - ${self:custom.securityGroup.${opt:stage, 'sandpit'}}
@@ -68,7 +76,7 @@ provider:
 
 functions:
   searchListingsByLatLng:
-    handler: src/functions/searchListingsByLatLng.main
+    handler: src/functions/search/searchListingsByLatLng.main
     memorySize: 2048
     events:
       - http:
@@ -76,13 +84,21 @@ functions:
           method: post
           cors: true
   searchQuery:
-    handler: src/functions/searchQuery.main
+    handler: src/functions/search/searchQuery.main
     memorySize: 2048
     events:
       - http:
           path: search/{key}/query
           method: post
           cors: true
+  resizeAndCacheImages:
+    handler: src/functions/images/resizeAndCacheImages.main
+    memorySize: 2048
+    events:
+      - http:
+          method: get
+          cors: true
+          contentHandling: CONVERT_TO_BINARY
 
 resources:
   - ${file(src/resources/api-gateway-errors.yml)}
