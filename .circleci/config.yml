@@ -19,7 +19,7 @@ jobs:
           command: |
             sudo npm i -g serverless@latest
             sudo apt-get install awscli
-            yarn --force
+            yarn
 
       - save_cache:
           paths:
@@ -54,7 +54,7 @@ jobs:
           command: |
             sudo npm i -g serverless@latest
             sudo apt-get install awscli
-            yarn --force
+            yarn
 
       - save_cache:
           paths:
