@@ -5,7 +5,7 @@ plugins:
   - serverless-dotenv-plugin
   - serverless-domain-manager
   - serverless-prune-plugin
-  - serverless-apigw-binary
+  # - serverless-apigw-binary
   - serverless-apigwy-binary
 
 custom:
@@ -34,9 +34,10 @@ custom:
   prune:
     automatic: true
     number: 5
-  apigwBinary:
-    types:
-      - 'image/*'
+  # apigwBinary:
+  #   types:
+  #     - 'image/*'
+  #     - '*/*'
 
 dotenv:
   path: ./.env
@@ -88,7 +89,7 @@ functions:
           path: search/{key}/query
           method: post
           cors: true
-  resizeAndCacheImages:
+  searchImages:
     handler: src/functions/images/searchImages.main
     memorySize: 2048
     events:
