@@ -13,15 +13,16 @@ module.exports = {
   },
 
   image: (data) => {
+    const image = Buffer.from(data, 'base64')
     return {
       headers: {
-        'Access-Control-Allow-Methods': 'GET',
-        'Access-Control-Allow-Origin': '*',
         'Content-Type': 'image/webp',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET',
         'Cache-Control': 'private, max-age=1195723'
       },
       statusCode: 200,
-      body: data,
+      body: image.toString('base64'),
       isBase64Encoded: true
     }
   },

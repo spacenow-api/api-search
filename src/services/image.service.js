@@ -8,8 +8,9 @@ const { getInstance: redisInstance } = require('./../helpers/redis.server')
 
 const redis = redisInstance()
 
-const MAX_W = 1024
-const MAX_H = 1024
+const MAX_W = 800
+const MAX_H = null
+const DEFAULT_QUALITY = 80
 
 function getRedisKey(value) {
   return crypto
@@ -26,11 +27,10 @@ async function getResizeImage(path, width, height) {
     responseType: 'arraybuffer'
   })
   const buffer = Buffer.from(fileResponse.data, 'base64')
-  const transform = sharp(buffer).toFormat('jpeg')
-  if (width || height) {
-    transform.resize(width, height)
-  }
-  return transform.toBuffer()
+  return sharp(buffer)
+    .resize(width, height)
+    .webp({ quality: DEFAULT_QUALITY })
+    .toBuffer()
 }
 
 async function searchImagesAndResize(path, width, height) {
@@ -44,17 +44,11 @@ async function searchImagesAndResize(path, width, height) {
     // if (imageData) {
     //   return imageData
     // } else {
-      let widthInt = MAX_W
-      if (width && parseInt(width) <= MAX_W) {
-        widthInt = parseInt(width)
-      }
-      let heightInt = MAX_H
-      if (height && parseInt(height) <= MAX_H) {
-        heightInt = parseInt(height)
-      }
-      const resizedBuffer = await getResizeImage(path, widthInt, heightInt)
-      // await redis.set(redisKey, resizedBuffer)
-      return resizedBuffer
+    const widthInt = width ? parseInt(width) : MAX_W
+    const heightInt = height ? parseInt(height) : MAX_H
+    const resizedBuffer = await getResizeImage(path, widthInt, heightInt)
+    // await redis.set(redisKey, resizedBuffer)
+    return resizedBuffer
     // }
   } catch (err) {
     throw new Error(err)
