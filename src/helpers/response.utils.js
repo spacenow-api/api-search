@@ -8,7 +8,8 @@ module.exports = {
         'Access-Control-Allow-Headers': 'x-requested-with'
       },
       statusCode: 200,
-      body: data && JSON.stringify(data)
+      body: data && JSON.stringify(data),
+      isBase64Encoded: false
     }
   },
 
@@ -35,9 +36,8 @@ module.exports = {
         'Access-Control-Allow-Headers': 'x-requested-with'
       },
       statusCode: 500,
-      body: JSON.stringify({
-        error: err.message ? err.message : 'Function error not identified.'
-      })
+      body: JSON.stringify({ error: err.message ? err.message : 'Function error not identified.' }),
+      isBase64Encoded: false
     }
   }
 }

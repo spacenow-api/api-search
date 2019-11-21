@@ -5,6 +5,7 @@ const searchService = require('./../../services/search.service')
 
 module.exports.main = (event, context, callback) => {
   context.callbackWaitsForEmptyEventLoop = false
+  console.log('Event Body: ', event.body)
   let payload
   try {
     payload = JSON.parse(event.body)
