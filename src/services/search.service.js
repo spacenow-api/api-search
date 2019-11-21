@@ -23,6 +23,7 @@ const sequelize = mysqlInstance()
 const redis = redisInstance()
 
 const RADIUS_DEFAULT = 10
+const MINIMUM_RESULT_SIZE = 10
 const PAGINATION_LIMIT_DEFAULT = 12
 const PERIODS = ['monthly', 'weekly', 'daily', 'hourly']
 
@@ -52,6 +53,11 @@ function getLatLngObj(latlng) {
 }
 
 async function searchListingIds(latlng, filters) {
+  const instantSearchKey = getRedisKey('_search_' + latlng + JSON.stringify(filters))
+  const freshResult = await redis.get(instantSearchKey)
+  if (freshResult && freshResult.length > MINIMUM_RESULT_SIZE) {
+    return JSON.parse(freshResult)
+  }
   let byRadius = (filters && filters.radius) || RADIUS_DEFAULT
   byRadius = byRadius <= 0 ? `` : `< ${byRadius}`
   const latlngObj = getLatLngObj(latlng)
@@ -89,7 +95,9 @@ async function searchListingIds(latlng, filters) {
   })
   const listingsResult = await fillListings(listings, locations)
   const searchKey = await cacheStore(latlng, Date.now(), listingsResult)
-  return searchQuery(searchKey, filters)
+  const queryResult = await searchQuery(searchKey, filters)
+  await redis.set(instantSearchKey, JSON.stringify(queryResult), 'EX', 300) // to expire key after 5 minutes
+  return queryResult
 }
 
 async function fillListings(listings, locations) {
