@@ -36,7 +36,7 @@ custom:
     number: 5
   apigwBinary:
     types:
-      - '*/*'
+      - 'image/*'
 
 dotenv:
   path: ./.env

@@ -13,7 +13,7 @@ module.exports = {
   },
 
   image: (data) => {
-    const image = Buffer.from(data, 'base64')
+    const image = Buffer.from(data.buffer, 'base64')
     return {
       headers: {
         'Content-Type': 'image/webp',
