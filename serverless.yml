@@ -6,7 +6,6 @@ plugins:
   - serverless-domain-manager
   - serverless-prune-plugin
   - serverless-apigwy-binary
-  # - serverless-apigw-binary
 
 custom:
   domains:
@@ -34,9 +33,6 @@ custom:
   prune:
     automatic: true
     number: 5
-  # apigwBinary:
-  #   types:
-  #     - '*/*'
 
 dotenv:
   path: ./.env

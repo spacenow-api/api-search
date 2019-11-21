@@ -612,9 +612,9 @@ atob@^2.1.1:
   integrity sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==
 
 aws-sdk@^2.490.0, aws-sdk@^2.509.0:
-  version "2.575.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.575.0.tgz#c405741887ec86c7856c827398ff2a7974253f99"
-  integrity sha512-GgqiThKKmN9CJcGDApJq+TuHkCYIx7A7QF01KPCn2nvxC5efrrJt/0GtrPXe+yJlKh3cl1HQTVobWiSfMV/xhA==
+  version "2.576.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.576.0.tgz#2709ba6ced3e940aa889e53305f725e56f6fc13b"
+  integrity sha512-VdMN1GnQ5V6nzgzl90VcZugNslXt1AyuYBlYHEB/1xz5FXKKJ+D4RDHryDRBOUC65F1OqS2G0mseoaxYEJEznQ==
   dependencies:
     buffer "^4.9.1"
     events "^1.1.1"
@@ -2043,7 +2043,7 @@ has-symbol-support-x@^1.4.1:
   resolved "https://registry.yarnpkg.com/has-symbol-support-x/-/has-symbol-support-x-1.4.2.tgz#1409f98bc00247da45da67cee0a36f282ff26455"
   integrity sha512-3ToOva++HaW+eCpgqZrCfN51IPB+7bJNVT6CUATzueB5Heb8o6Nam0V3HG5dlDvZU1Gn5QLcbahiKw/XVk5JJw==
 
-has-symbols@^1.0.0:
+has-symbols@^1.0.0, has-symbols@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/has-symbols/-/has-symbols-1.0.1.tgz#9f5214758a44196c406d9bd76cebf81ec2dd31e8"
   integrity sha512-PLcsoqu++dmEIZB+6totNFKq/7Do+Z0u4oT0zKOJNl3lYK6vGwwu2hjHs+68OEZbTjiUE9bgOABXbP/GvrS0Kg==
@@ -2473,11 +2473,11 @@ is-stream@^1.0.0, is-stream@^1.0.1, is-stream@^1.1.0:
   integrity sha1-EtSj3U5o4Lec6428hBc66A2RykQ=
 
 is-symbol@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/is-symbol/-/is-symbol-1.0.2.tgz#a055f6ae57192caee329e7a860118b497a950f38"
-  integrity sha512-HS8bZ9ox60yCJLH9snBpIwv9pYUAkcuLhSA1oero1UB5y9aiQpRA8y2ex945AOtCZL1lJDeIk3G5LthswI46Lw==
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/is-symbol/-/is-symbol-1.0.3.tgz#38e1014b9e6329be0de9d24a414fd7441ec61937"
+  integrity sha512-OwijhaRSgqvhm/0ZdAcXNZt9lYdKFpcRDT5ULUuYXPoT794UNOdU+gpT6Rzo7b4V2HUl/op6GqY894AZwv9faQ==
   dependencies:
-    has-symbols "^1.0.0"
+    has-symbols "^1.0.1"
 
 is-windows@^1.0.2:
   version "1.0.2"
@@ -3743,11 +3743,6 @@ sequelize@~5.17.0:
     uuid "^3.2.1"
     validator "^10.11.0"
     wkx "^0.4.6"
-
-serverless-apigw-binary@~0.4.4:
-  version "0.4.4"
-  resolved "https://registry.yarnpkg.com/serverless-apigw-binary/-/serverless-apigw-binary-0.4.4.tgz#f3cffd8365322a2a1d8bde5fd94b306b7a64d4fb"
-  integrity sha512-2DJmQTzeXa/+8u9ekReqf7j4gQjBtzQE4MK9nlOnEz4F7MVWCQXYlLPmf2TXSoxxJZzlWvIiNzCTq6vAT9F5FQ==
 
 serverless-apigwy-binary@~1.0.0:
   version "1.0.0"
