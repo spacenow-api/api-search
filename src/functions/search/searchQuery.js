@@ -5,8 +5,15 @@ const searchService = require('./../../services/search.service')
 
 module.exports.main = (event, context, callback) => {
   context.callbackWaitsForEmptyEventLoop = false
+  let payload
+  try {
+    payload = JSON.parse(event.body)
+  } catch (ignore) {
+    const jsonFromBuffer = Buffer.from(event.body || '{}', 'base64')
+    payload = JSON.parse(jsonFromBuffer.toString('utf8'))
+  }
   searchService
-    .searchQuery(event.pathParameters.key, JSON.parse(event.body || `{}`))
+    .searchQuery(event.pathParameters.key, payload)
     .then((data) => callback(null, r.success(data)))
     .catch((err) => callback(null, r.failure(err)))
 }

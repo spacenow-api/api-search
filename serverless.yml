@@ -5,8 +5,7 @@ plugins:
   - serverless-dotenv-plugin
   - serverless-domain-manager
   - serverless-prune-plugin
-  # - serverless-apigw-binary
-  # - serverless-apigwy-binary
+  - serverless-apigwy-binary
 
 custom:
   domains:
@@ -34,10 +33,6 @@ custom:
   prune:
     automatic: true
     number: 5
-  # apigwBinary:
-  #   types:
-  #     - 'image/*'
-  #     - '*/*'
 
 dotenv:
   path: ./.env
@@ -97,7 +92,7 @@ functions:
           path: search/images
           method: get
           cors: true
-          # contentHandling: CONVERT_TO_BINARY
+          contentHandling: CONVERT_TO_BINARY
 
 resources:
   - ${file(src/resources/api-gateway-errors.yml)}
