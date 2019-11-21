@@ -6,7 +6,7 @@ plugins:
   - serverless-domain-manager
   - serverless-prune-plugin
   # - serverless-apigw-binary
-  - serverless-apigwy-binary
+  # - serverless-apigwy-binary
 
 custom:
   domains:
@@ -97,7 +97,7 @@ functions:
           path: search/images
           method: get
           cors: true
-          contentHandling: CONVERT_TO_BINARY
+          # contentHandling: CONVERT_TO_BINARY
 
 resources:
   - ${file(src/resources/api-gateway-errors.yml)}
