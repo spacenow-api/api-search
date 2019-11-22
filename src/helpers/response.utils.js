@@ -29,7 +29,6 @@ module.exports = {
   },
 
   image: (data) => {
-    const image = Buffer.from(data.buffer, 'base64')
     return {
       headers: {
         'Content-Type': 'image/webp',
@@ -38,7 +37,7 @@ module.exports = {
         'Cache-Control': 'private, max-age=1195723'
       },
       statusCode: 200,
-      body: image.toString('base64'),
+      body: data.toString('base64'),
       isBase64Encoded: true
     }
   }
