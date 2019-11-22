@@ -5,7 +5,7 @@ plugins:
   - serverless-dotenv-plugin
   - serverless-domain-manager
   - serverless-prune-plugin
-  - serverless-apigwy-binary
+  - serverless-apigw-binary
 
 custom:
   domains:
@@ -33,6 +33,9 @@ custom:
   prune:
     automatic: true
     number: 5
+  apigwBinary:
+    types:
+      - '*/*'
 
 dotenv:
   path: ./.env
@@ -76,7 +79,6 @@ functions:
           path: search/listings/{latlng}
           method: post
           cors: true
-          contentHandling: CONVERT_TO_TEXT
   searchQuery:
     handler: src/functions/search/searchQuery.main
     memorySize: 2048
@@ -85,7 +87,6 @@ functions:
           path: search/{key}/query
           method: post
           cors: true
-          contentHandling: CONVERT_TO_TEXT
   searchImages:
     handler: src/functions/images/searchImages.main
     memorySize: 2048
@@ -94,7 +95,6 @@ functions:
           path: search/images
           method: get
           cors: true
-          contentHandling: CONVERT_TO_BINARY
 
 resources:
   - ${file(src/resources/api-gateway-errors.yml)}
