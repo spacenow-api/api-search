@@ -36,8 +36,8 @@ async function getResizeImage(path, width, height) {
 async function searchImagesAndResize(path, width, height) {
   try {
     let key = '__image__' + path
-    if (width && height) {
-      key = key + width + height
+    if (width) {
+      key = key + width
     }
     const redisKey = getRedisKey(key)
     const imageData = await redis.getBuffer(redisKey)
