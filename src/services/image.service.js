@@ -35,21 +35,21 @@ async function getResizeImage(path, width, height) {
 
 async function searchImagesAndResize(path, width, height) {
   try {
-    // let key = '__image__' + path
-    // if (width && height) {
-    //   key = key + width + height
-    // }
-    // const redisKey = getRedisKey(key)
-    // const imageData = await redis.getBuffer(redisKey)
-    // if (imageData) {
-    //   return imageData
-    // } else {
-    const widthInt = width ? parseInt(width) : MAX_W
-    const heightInt = height ? parseInt(height) : MAX_H
-    const resizedBuffer = await getResizeImage(path, widthInt, heightInt)
-    // await redis.set(redisKey, resizedBuffer)
-    return resizedBuffer
-    // }
+    let key = '__image__' + path
+    if (width && height) {
+      key = key + width + height
+    }
+    const redisKey = getRedisKey(key)
+    const imageData = await redis.getBuffer(redisKey)
+    if (imageData) {
+      return imageData
+    } else {
+      const widthInt = width ? parseInt(width) : MAX_W
+      const heightInt = height ? parseInt(height) : MAX_H
+      const resizedBuffer = await getResizeImage(path, widthInt, heightInt)
+      await redis.set(redisKey, resizedBuffer)
+      return resizedBuffer
+    }
   } catch (err) {
     throw new Error(err)
   }
