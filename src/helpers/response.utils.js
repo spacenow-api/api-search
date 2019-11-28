@@ -31,7 +31,7 @@ module.exports = {
   image: (data) => {
     return {
       headers: {
-        'Content-Type': 'image/jpeg',
+        'Content-Type': 'image/webp',
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'GET',
         'Cache-Control': 'private, max-age=1195723'
