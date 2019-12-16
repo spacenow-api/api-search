@@ -53,14 +53,7 @@ function getLatLngObj(latlng) {
   }
 }
 
-async function searchListingIds(latlng, filters) {
-  const instantSearchKey = getRedisKey('_search_' + latlng + JSON.stringify(filters))
-  const freshResult = await redis.get(instantSearchKey)
-  if (freshResult && freshResult.length > MINIMUM_RESULT_SIZE) {
-    return JSON.parse(freshResult)
-  }
-  let byRadius = (filters && filters.radius) || RADIUS_DEFAULT
-  byRadius = byRadius <= 0 ? `` : `< ${byRadius}`
+async function getCloseLocations(latlng, byRadius) {
   const latlngObj = getLatLngObj(latlng)
   const queryResults = await sequelize.query(`
     SELECT 
@@ -76,6 +69,18 @@ async function searchListingIds(latlng, filters) {
     locations = queryResults[0]
     locationIds = locations.map((o) => o.id)
   }
+  return { locations, locationIds }
+}
+
+async function searchListingIds(latlng, filters) {
+  const instantSearchKey = getRedisKey('_search_' + latlng + JSON.stringify(filters))
+  const freshResult = await redis.get(instantSearchKey)
+  if (freshResult && freshResult.length > MINIMUM_RESULT_SIZE) {
+    return JSON.parse(freshResult)
+  }
+  let byRadius = (filters && filters.radius) || RADIUS_DEFAULT
+  byRadius = byRadius <= 0 ? `` : `< ${byRadius}`
+  const { locations, locationIds } = await getCloseLocations(latlng, byRadius)
   const listings = await Listing.findAll({
     raw: true,
     attributes: [
