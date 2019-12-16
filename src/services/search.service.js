@@ -96,7 +96,7 @@ async function searchListingIds(latlng, filters) {
   const listingsResult = await fillListings(listings, locations)
   const searchKey = await cacheStore(latlng, Date.now(), listingsResult)
   const queryResult = await searchQuery(searchKey, filters)
-  await redis.set(instantSearchKey, JSON.stringify(queryResult), 'EX', 300) // to expire key after 5 minutes
+  await redis.set(instantSearchKey, JSON.stringify(queryResult), 'EX', 21600) // to expire key after 6 hours
   return queryResult
 }
 
