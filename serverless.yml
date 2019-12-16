@@ -87,6 +87,14 @@ functions:
           path: search/{key}/query
           method: post
           cors: true
+  searchSimilar:
+    handler: src/functions/search/searchSimilar.main
+    memorySize: 2048
+    events:
+      - http:
+          path: search/{listingId}/similar
+          method: get
+          cors: true
   searchImages:
     handler: src/functions/images/searchImages.main
     memorySize: 2048

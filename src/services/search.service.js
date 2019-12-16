@@ -16,7 +16,8 @@ const {
   User,
   UserProfile,
   SubcategorySpecifications,
-  SubcategoryBookingPeriod
+  SubcategoryBookingPeriod,
+  Location
 } = require('./../models')
 
 const sequelize = mysqlInstance()
@@ -300,4 +301,23 @@ async function searchQuery(searchKey, filters) {
   return { status: 'OK', searchKey, frequencies, ...dataPaginated }
 }
 
-module.exports = { searchListingIds, searchQuery }
+async function searchSimilar(listingId) {
+  const similarCacheKey = getRedisKey(`_search_similar_listing_${listingId}`)
+  const cacheContent = await redis.get(similarCacheKey)
+  if (cacheContent) {
+    return JSON.parse(cacheContent)
+  }
+  const listingObj = await Listing.findOne({
+    attributes: ['locationId'],
+    where: { id: listingId }
+  })
+  const locationObj = await Location.findOne({
+    where: { id: listingObj.locationId }
+  })
+  const latlng = `${locationObj.lat},${locationObj.lng}`
+  const searchResult = await searchListingIds(latlng, { limit: 3, radius: -1 })
+  await redis.set(similarCacheKey, JSON.stringify(searchResult), 'EX', 604800) // to expire key after 7 days
+  return searchResult
+}
+
+module.exports = { searchListingIds, searchQuery, searchSimilar }
