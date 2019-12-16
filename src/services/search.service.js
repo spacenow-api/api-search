@@ -72,16 +72,8 @@ async function getCloseLocations(latlng, byRadius) {
   return { locations, locationIds }
 }
 
-async function searchListingIds(latlng, filters) {
-  const instantSearchKey = getRedisKey('_search_' + latlng + JSON.stringify(filters))
-  const freshResult = await redis.get(instantSearchKey)
-  if (freshResult && freshResult.length > MINIMUM_RESULT_SIZE) {
-    return JSON.parse(freshResult)
-  }
-  let byRadius = (filters && filters.radius) || RADIUS_DEFAULT
-  byRadius = byRadius <= 0 ? `` : `< ${byRadius}`
-  const { locations, locationIds } = await getCloseLocations(latlng, byRadius)
-  const listings = await Listing.findAll({
+async function getListingsByLocations(locationIds, limit = 0) {
+  const whereCondition = {
     raw: true,
     attributes: [
       'id',
@@ -97,8 +89,24 @@ async function searchListingIds(latlng, filters) {
       isPublished: true,
       status: 'active'
     },
-    order: sequelize.literal(`FIELD(locationId, ${locationIds.join(',')})`)
-  })
+    order: sequelize.literal(`FIELD(locationId, ${locationIds.join(',')})`),
+  }
+  if (limit > 0) {
+    whereCondition.limit = limit
+  }
+  return Listing.findAll(whereCondition)
+}
+
+async function searchListingIds(latlng, filters) {
+  const instantSearchKey = getRedisKey('_search_' + latlng + JSON.stringify(filters))
+  const freshResult = await redis.get(instantSearchKey)
+  if (freshResult && freshResult.length > MINIMUM_RESULT_SIZE) {
+    return JSON.parse(freshResult)
+  }
+  let byRadius = (filters && filters.radius) || RADIUS_DEFAULT
+  byRadius = byRadius <= 0 ? `` : `< ${byRadius}`
+  const { locations, locationIds } = await getCloseLocations(latlng, byRadius)
+  const listings = await getListingsByLocations(locationIds, filters.limit)
   const listingsResult = await fillListings(listings, locations)
   const searchKey = await cacheStore(latlng, Date.now(), listingsResult)
   const queryResult = await searchQuery(searchKey, filters)
