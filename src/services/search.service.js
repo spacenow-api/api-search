@@ -28,6 +28,21 @@ const MINIMUM_RESULT_SIZE = 10
 const PAGINATION_LIMIT_DEFAULT = 12
 const PERIODS = ['monthly', 'weekly', 'daily', 'hourly']
 
+/**
+ * Based on https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
+ * @param {Array of Integer} elements
+ */
+function shuffle(elements) {
+  let m = elements.length, t, i
+  while (m) {
+    i = Math.floor(Math.random() * m--)
+    t = elements[m]
+    elements[m] = elements[i]
+    elements[i] = t
+  }
+  return elements
+}
+
 function getRedisKey(value) {
   return crypto
     .createHash('sha256')
@@ -328,9 +343,12 @@ async function searchSimilar(listingId) {
     where: { id: listingObj.locationId }
   })
   const latlng = `${locationObj.lat},${locationObj.lng}`
-  const searchResult = await searchListingIds(latlng, { limit: 3, radius: -1 })
-  await redis.set(similarCacheKey, JSON.stringify(searchResult), 'EX', 604800) // to expire key after 7 days
-  return searchResult
+  const { locations, locationIds } = await getCloseLocations(latlng, '')
+  // Shuffling locations to show different results for each load time...
+  const listings = await getListingsByLocations(shuffle(locationIds), 3)
+  const listingsResult = await fillListings(listings, locations)
+  await redis.set(similarCacheKey, JSON.stringify({ result: listingsResult }), 'EX', 21600) // to expire key after 6 hours
+  return { result: listingsResult }
 }
 
 module.exports = { searchListingIds, searchQuery, searchSimilar }
