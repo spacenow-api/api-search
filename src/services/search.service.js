@@ -308,6 +308,18 @@ async function searchQuery(searchKey, filters) {
         (o) => o.listingData.basePrice <= filters.priceMax
       )
     }
+    // Check minimum capacity...
+    if (filters.capacityMin && filters.capacityMin > 0) {
+      filteredResult = filteredResult.filter(
+        (o) => o.listingData.capacity >= filters.capacityMin
+      )
+    }
+    // Check maximun capacity...
+    if (filters.capacityMax && filters.capacityMax > 0) {
+      filteredResult = filteredResult.filter(
+        (o) => o.listingData.capacity <= filters.capacityMax
+      )
+    }
     // Check instant booking...
     if (filters.instant) {
       const boolValue = /true/i.test(filters.instant)
