@@ -132,96 +132,98 @@ async function searchListingIds(latlng, filters) {
 async function fillListings(listings, locations) {
   try {
     const searchResults = []
-    for (const listingObj of listings) {
-      // Getting listing data...
-      const listingData = await ListingData.findOne({
-        attributes: [
-          'id',
-          'basePrice',
-          'currency',
-          'minTerm',
-          'capacity',
-          'size',
-          'meetingRooms',
-          'isFurnished',
-          'carSpace',
-          'sizeOfVehicle',
-          'maxEntranceHeight',
-          'spaceType',
-          'bookingType',
-          'accessType'
-        ],
-        where: { listingId: listingObj.id }
-      })
-
-      // Specifications...
-      const specificationsData = await SubcategorySpecifications.findAll({
-        attributes: ['listSettingsSpecificationId'],
-        where: { listSettingsParentId: listingObj.listSettingsParentId }
-      })
-      const specificationsArray = []
-      for (const item of specificationsData) {
-        const settingsObj = await ListSettings.findOne({
-          attributes: ['id', 'typeId', 'itemName', 'otherItemName', 'specData'],
-          where: { id: item.listSettingsSpecificationId }
+    await Promise.all(
+      listings.map(async (listingObj) => {
+        // Getting listing data...
+        const listingData = await ListingData.findOne({
+          attributes: [
+            'id',
+            'basePrice',
+            'currency',
+            'minTerm',
+            'capacity',
+            'size',
+            'meetingRooms',
+            'isFurnished',
+            'carSpace',
+            'sizeOfVehicle',
+            'maxEntranceHeight',
+            'spaceType',
+            'bookingType',
+            'accessType'
+          ],
+          where: { listingId: listingObj.id }
         })
-        specificationsArray.push(settingsObj)
-      }
 
-      // Getting location data...
-      const locationData = locations.find((o) => o.id == listingObj.locationId)
-
-      // Getting category & sub-category...
-      const parentObj = await ListSettingsParent.findOne({
-        attributes: ['listSettingsParentId', 'listSettingsChildId'],
-        where: { id: listingObj.listSettingsParentId }
-      })
-      const categoryObj = await ListSettings.findOne({
-        attributes: ['id', 'typeId', 'itemName', 'otherItemName'],
-        where: { id: parentObj.listSettingsParentId }
-      })
-      const subCategoryObj = await ListSettings.findOne({
-        attributes: ['id', 'typeId', 'itemName', 'otherItemName'],
-        where: { id: parentObj.listSettingsChildId }
-      })
-
-      // Getting photos...
-      const photosArray = await ListingPhotos.findAll({
-        attributes: ['id', 'name', 'isCover', 'type'],
-        where: { listingId: listingObj.id }
-      })
-
-      // Getting user host details...
-      const hostUser = await User.findOne({
-        raw: true,
-        attributes: ['id', 'email'],
-        where: { id: listingObj.userId }
-      })
-      const hostProfile = await UserProfile.findOne({
-        attributes: [
-          'profileId',
-          'firstName',
-          'lastName',
-          'displayName',
-          'picture'
-        ],
-        where: { userId: listingObj.userId }
-      })
-
-      searchResults.push({
-        ...listingObj,
-        listingData: listingData,
-        specifications: specificationsArray,
-        location: locationData,
-        category: categoryObj,
-        subcategory: subCategoryObj,
-        photos: photosArray,
-        host: {
-          ...hostUser,
-          profile: hostProfile
+        // Specifications...
+        const specificationsData = await SubcategorySpecifications.findAll({
+          attributes: ['listSettingsSpecificationId'],
+          where: { listSettingsParentId: listingObj.listSettingsParentId }
+        })
+        const specificationsArray = []
+        for (const item of specificationsData) {
+          const settingsObj = await ListSettings.findOne({
+            attributes: ['id', 'typeId', 'itemName', 'otherItemName', 'specData'],
+            where: { id: item.listSettingsSpecificationId }
+          })
+          specificationsArray.push(settingsObj)
         }
+
+        // Getting location data...
+        const locationData = locations.find((o) => o.id == listingObj.locationId)
+
+        // Getting category & sub-category...
+        const parentObj = await ListSettingsParent.findOne({
+          attributes: ['listSettingsParentId', 'listSettingsChildId'],
+          where: { id: listingObj.listSettingsParentId }
+        })
+        const categoryObj = await ListSettings.findOne({
+          attributes: ['id', 'typeId', 'itemName', 'otherItemName'],
+          where: { id: parentObj.listSettingsParentId }
+        })
+        const subCategoryObj = await ListSettings.findOne({
+          attributes: ['id', 'typeId', 'itemName', 'otherItemName'],
+          where: { id: parentObj.listSettingsChildId }
+        })
+
+        // Getting photos...
+        const photosArray = await ListingPhotos.findAll({
+          attributes: ['id', 'name', 'isCover', 'type'],
+          where: { listingId: listingObj.id }
+        })
+
+        // Getting user host details...
+        const hostUser = await User.findOne({
+          raw: true,
+          attributes: ['id', 'email'],
+          where: { id: listingObj.userId }
+        })
+        const hostProfile = await UserProfile.findOne({
+          attributes: [
+            'profileId',
+            'firstName',
+            'lastName',
+            'displayName',
+            'picture'
+          ],
+          where: { userId: listingObj.userId }
+        })
+
+        searchResults.push({
+          ...listingObj,
+          listingData: listingData,
+          specifications: specificationsArray,
+          location: locationData,
+          category: categoryObj,
+          subcategory: subCategoryObj,
+          photos: photosArray,
+          host: {
+            ...hostUser,
+            profile: hostProfile
+          }
+        })
       })
-    }
+    );
     return searchResults
   } catch (err) {
     throw new Error(err)
