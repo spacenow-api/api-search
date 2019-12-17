@@ -92,7 +92,7 @@ functions:
     memorySize: 2048
     events:
       - http:
-          path: search/{listingId}/similar
+          path: search/similar/{listingId}
           method: get
           cors: true
   searchImages:
