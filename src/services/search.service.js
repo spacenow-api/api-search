@@ -189,7 +189,7 @@ async function fillListings(listings, locations) {
         // Getting photos...
         const photosArray = await ListingPhotos.findAll({
           attributes: ['id', 'name', 'isCover', 'type'],
-          where: { type: 'image/jpeg', listingId: listingObj.id }
+          where: { type: { [Op.like]: 'image/%' }, listingId: listingObj.id }
         })
 
         // Getting user host details...
