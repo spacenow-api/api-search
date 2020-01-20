@@ -23,7 +23,7 @@ const {
 const sequelize = mysqlInstance()
 const redis = redisInstance()
 
-const RADIUS_DEFAULT = 10
+const RADIUS_DEFAULT = 50
 const MINIMUM_RESULT_SIZE = 10
 const PAGINATION_LIMIT_DEFAULT = 12
 const PERIODS = ['monthly', 'weekly', 'daily', 'hourly']
