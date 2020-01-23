@@ -335,12 +335,29 @@ async function searchQuery(searchKey, filters) {
       )
     }
   }
+  // Temporary cleaning for few specific data...
+  filteredResult = _cleaning(filteredResult)
   const dataPaginated = getPaginator(
     filteredResult,
     filters.page,
     filters.limit
   )
   return { status: 'OK', searchKey, frequencies, ...dataPaginated }
+}
+
+/**
+ * Temporary.
+ * @todo Remove.
+ */
+function _cleaning(searchResults) {
+  let cleanedResults = JSON.parse(JSON.stringify(searchResults))
+  try {
+    // Removing Creative Spaces...
+    cleanedResults = cleanedResults.filter((o) =>
+      o.subcategory.otherItemName !== 'creative')
+  } catch (_) {
+  }
+  return cleanedResults
 }
 
 async function searchSimilar(listingId) {
