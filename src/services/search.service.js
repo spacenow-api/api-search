@@ -387,7 +387,7 @@ function _cleaning(searchResults) {
 }
 
 async function searchSimilar(listingId) {
-  const similarCacheKey = getRedisKey(`_search_similar_listing_${listingId}`)
+  const similarCacheKey = getRedisKey(`_similar_listing_${listingId}`)
   const cacheContent = await redis.get(similarCacheKey)
   if (cacheContent) {
     return JSON.parse(cacheContent)
