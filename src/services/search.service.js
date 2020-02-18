@@ -112,6 +112,32 @@ async function getListingsByLocations(locationIds, limit = 0) {
   return Listing.findAll(whereCondition)
 }
 
+async function getListingsByLocationsCategory(locationIds, categoryId, limit = 0) {
+  const whereCondition = {
+    raw: true,
+    attributes: [
+      'id',
+      'title',
+      'userId',
+      'locationId',
+      'bookingPeriod',
+      'listSettingsParentId'
+    ],
+    where: {
+      locationId: { [Op.in]: locationIds },
+      listSettingsParentId: categoryId,
+      isReady: true,
+      isPublished: true,
+      status: 'active'
+    },
+    order: sequelize.literal(`FIELD(locationId, ${locationIds.join(',')})`),
+  }
+  if (limit > 0) {
+    whereCondition.limit = limit
+  }
+  return Listing.findAll(whereCondition)
+}
+
 async function searchListingIds(latlng, filters) {
   const instantSearchKey = getRedisKey('_search_' + latlng + JSON.stringify(filters))
   const freshResult = await redis.get(instantSearchKey)
@@ -367,7 +393,7 @@ async function searchSimilar(listingId) {
     return JSON.parse(cacheContent)
   }
   const listingObj = await Listing.findOne({
-    attributes: ['locationId'],
+    attributes: ['locationId', 'listSettingsParentId'],
     where: { id: listingId }
   })
   const locationObj = await Location.findOne({
@@ -376,9 +402,9 @@ async function searchSimilar(listingId) {
   const latlng = `${locationObj.lat},${locationObj.lng}`
   const { locations, locationIds } = await getCloseLocations(latlng, '')
   // Shuffling locations to show different results for each load time...
-  const listings = await getListingsByLocations(shuffle(locationIds), 3)
+  const listings = await getListingsByLocationsCategory(shuffle(locationIds), listingObj.listSettingsParentId, 3)
   const listingsResult = await fillListings(listings, locations)
-  await redis.set(similarCacheKey, JSON.stringify({ result: listingsResult }), 'EX', 21600) // to expire key after 6 hours
+  await redis.set(similarCacheKey, JSON.stringify({ result: listingsResult }), 'EX', 30) // to expire key after 6 hours = 21600 secs
   return { result: listingsResult }
 }
 
