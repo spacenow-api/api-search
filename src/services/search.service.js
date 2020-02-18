@@ -400,7 +400,7 @@ async function searchSimilar(listingId) {
     where: { id: listingObj.locationId }
   })
   const latlng = `${locationObj.lat},${locationObj.lng}`
-  const { locations, locationIds } = await getCloseLocations(latlng, '')
+  const { locations, locationIds } = await getCloseLocations(latlng, `< 50`)
   // Shuffling locations to show different results for each load time...
   const listings = await getListingsByLocationsCategory(shuffle(locationIds), listingObj.listSettingsParentId, 3)
   const listingsResult = await fillListings(listings, locations)
