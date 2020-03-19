@@ -325,11 +325,11 @@ function _cleaning(searchResults) {
 }
 
 async function searchSimilar(listingId) {
-  // const similarCacheKey = getRedisKey(`_similar_listing_${listingId}`);
-  // const cacheContent = await redis.get(similarCacheKey);
-  // if (cacheContent) {
-  // return JSON.parse(cacheContent);
-  // }
+  const similarCacheKey = getRedisKey(`_similar_listing_${listingId}`);
+  const cacheContent = await redis.get(similarCacheKey);
+  if (cacheContent) {
+    return JSON.parse(cacheContent);
+  }
   const listingObj = await Listing.findOne({
     attributes: ["locationId", "listSettingsParentId"],
     where: { id: listingId }
@@ -342,7 +342,7 @@ async function searchSimilar(listingId) {
   // Shuffling locations to show different results for each load time...
   const listings = await getListingsByLocationsCategory(shuffle(locationIds), listingObj.listSettingsParentId, 3);
   const listingsResult = await fillListings(listings, locations);
-  // await redis.set(similarCacheKey, JSON.stringify({ result: listingsResult }), "EX", 21600);
+  await redis.set(similarCacheKey, JSON.stringify({ result: listingsResult }), "EX", 21600);
   return { result: listingsResult };
 }
 
