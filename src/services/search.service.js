@@ -55,6 +55,10 @@ function getLatLngObj(latlng) {
     lng: latAndLng[1]
   };
 }
+/*
+Order by test function
+ -- ORDER BY ACOS(SIN(RADIANS(lat)) * SIN(RADIANS(${latlngObj.lat})) + COS(RADIANS(lat)) * COS(RADIANS(${latlngObj.lat})) * COS(RADIANS(lng) - RADIANS(${latlngObj.lng}))) * 6380
+*/
 
 async function getCloseLocations(latlng, byRadius) {
   const latlngObj = getLatLngObj(latlng);
@@ -64,7 +68,7 @@ async function getCloseLocations(latlng, byRadius) {
     FROM Location 
     WHERE (1=1) 
       AND ACOS(SIN(RADIANS(lat)) * SIN(RADIANS(${latlngObj.lat})) + COS(RADIANS(lat)) * COS(RADIANS(${latlngObj.lat})) * COS(RADIANS(lng) - RADIANS(${latlngObj.lng}))) * 6380 ${byRadius}
-    ORDER BY ACOS(SIN(RADIANS(lat)) * SIN(RADIANS(${latlngObj.lat})) + COS(RADIANS(lat)) * COS(RADIANS(${latlngObj.lat})) * COS(RADIANS(lng) - RADIANS(${latlngObj.lng}))) * 6380
+    ORDER BY RAND()  
   `);
   let locations = [];
   let locationIds = [];
@@ -320,7 +324,7 @@ function _cleaning(searchResults) {
   try {
     // Removing Creative Spaces...
     cleanedResults = cleanedResults.filter(o => o.subcategory.otherItemName !== "creative");
-  } catch (_) {}
+  } catch (_) { }
   return cleanedResults;
 }
 
