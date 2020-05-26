@@ -40,5 +40,19 @@ module.exports = {
       body: data.toString('base64'),
       isBase64Encoded: true
     }
+  },
+
+  buffer: (data) => {
+    return {
+      headers: {
+        'Content-Type': 'application/octet-stream',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET',
+        'Cache-Control': 'private, max-age=1195723'
+      },
+      statusCode: 200,
+      body: data.toString('base64'),
+      isBase64Encoded: true
+    }
   }
 }

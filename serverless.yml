@@ -25,17 +25,17 @@ custom:
     prod: sg-00b4a2172f7e29276
   customDomain:
     domainName: ${self:custom.domains.${opt:stage, 'sandpit'}, self:custom.domains.default}
-    basePath: ''
+    basePath: ""
     stage: ${opt:stage, 'sandpit'}
     certificateArn: ${ssm:/${opt:stageCert, 'SANDPIT'}/ACM_CERTIFICATE}
     createRoute53Record: true
-    endpointType: 'regional'
+    endpointType: "regional"
   prune:
     automatic: true
     number: 5
   apigwBinary:
     types:
-      - '*/*'
+      - "*/*"
 
 dotenv:
   path: ./.env
@@ -47,6 +47,7 @@ dotenv:
     - DATABASE_PASSWORD
     - GOOGLE_MAP_API
     - REDIS_HOST
+    - S3_BUCKET
 
 provider:
   name: aws
@@ -71,6 +72,13 @@ provider:
     REDIS_HOST: ${ssm:/${opt:stageCert, 'SANDPIT'}/SPACENOW/REDIS_HOST~true}
 
 functions:
+  put-object:
+    handler: src/functions/aws/s3/put-object.main
+    events:
+      - http:
+          path: put-object
+          method: post
+          cors: true
   searchListingsByLatLng:
     handler: src/functions/search/searchListingsByLatLng.main
     memorySize: 2048

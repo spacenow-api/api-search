@@ -1,6 +1,6 @@
 'use strict'
 
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
   return sequelize.define(
     'ListingPhotos',
     {
@@ -29,19 +29,19 @@ module.exports = function(sequelize, DataTypes) {
       },
       bucket: {
         type: DataTypes.STRING(255),
-        allowNull: false
       },
       region: {
         type: DataTypes.STRING(255),
-        allowNull: false
       },
       key: {
         type: DataTypes.STRING(255),
-        allowNull: false
       },
       type: {
         type: DataTypes.STRING(255),
-        allowNull: false
+      },
+      category: {
+        type: DataTypes.ENUM('photo', 'video', 'menu', 'floorplan'),
+        default: "photo"
       },
       createdAt: {
         type: DataTypes.DATE,
