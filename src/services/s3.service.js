@@ -1,7 +1,9 @@
 "use strict";
 
 const AWS = require("aws-sdk");
-const s3 = new AWS.S3();
+const s3 = new AWS.S3({
+  region: "ap-southeast-2"
+});
 const axios = require("axios")
 
 const { ListingPhotos } = require('./../models')
