@@ -85,7 +85,16 @@ functions:
       - http:
           path: put-object-from-url
           method: post
-          cors: true
+          cors:
+            origin: "*"
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+            allowCredentials: true
   searchListingsByLatLng:
     handler: src/functions/search/searchListingsByLatLng.main
     memorySize: 2048
