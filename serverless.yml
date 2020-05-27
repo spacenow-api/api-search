@@ -76,7 +76,14 @@ functions:
     handler: src/functions/aws/s3/put-object.main
     events:
       - http:
-          path: put-object
+          path: /v2/put-object/{id}
+          method: post
+          cors: true
+  put-object-from-url:
+    handler: src/functions/aws/s3/put-object-from-url.main
+    events:
+      - http:
+          path: put-object-from-url
           method: post
           cors: true
   searchListingsByLatLng:

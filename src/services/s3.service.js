@@ -6,7 +6,7 @@ const axios = require("axios")
 
 const { ListingPhotos } = require('./../models')
 
-const putObject = async ({ body, bucket, key, listingId }) => {
+const putObjectFromURL = async ({ body, listingId }) => {
 
   const headers = {
     responseType: 'arraybuffer'
@@ -16,7 +16,6 @@ const putObject = async ({ body, bucket, key, listingId }) => {
   const buffer = await Buffer.from(resp.data, 'base64');
 
   var params = {
-    //Body: new Buffer(body.replace(/^data:image\/\w+;base64,/, ""), "base64"),
     Body: new Buffer(buffer),
     Bucket: `${bucket || process.env.S3_BUCKET}/space-images/${listingId}`,
     Key: `${keyS}.jpg`,
@@ -35,9 +34,29 @@ const putObject = async ({ body, bucket, key, listingId }) => {
     });
   });
 
-  // await ListingPhotos.create({})
 };
 
+const putObject = async ({ file }, id) => {
+  const keyS = new Date().valueOf().toString()
+  var params = {
+    Body: new Buffer(file.replace(/^data:image\/\w+;base64,/, ""), "base64"),
+    Bucket: `${process.env.S3_BUCKET}/space-images/${id}`,
+    Key: `${keyS}.jpg`,
+    ContentEncoding: "base64",
+    ContentType: "image/webp"
+  };
+  return new Promise((resolve, reject) => {
+    s3.putObject(params, (error, data) => {
+      if (error) reject(error);
+      resolve({
+        url: `https://${process.env.S3_BUCKET}.s3.amazonaws.com/space-images/${id}/${keyS}.jpg`
+      });
+    });
+  });
+};
+
+
 module.exports = {
-  putObject
+  putObject,
+  putObjectFromURL
 };

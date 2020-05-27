@@ -3,9 +3,8 @@ const { success, failure } = require("../../../helpers/response.utils");
 
 module.exports.main = (event, context, callback) => {
   context.callbackWaitsForEmptyEventLoop = false;
-  const { id } = event.pathParameters;
   s3Service
-    .putObject(JSON.parse(event.body), id)
+    .putObjectFromURL(JSON.parse(event.body))
     .then(data => callback(null, success(data)))
     .catch(err => callback(null, failure(err)));
 };

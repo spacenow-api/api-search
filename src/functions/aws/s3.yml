@@ -1,7 +1,0 @@
-put-object:
-  handler: src/functions/aws/s3/put-object.main
-  events:
-    - http:
-        path: put-object
-        method: post
-        cors: true
