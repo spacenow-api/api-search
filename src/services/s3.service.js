@@ -16,7 +16,7 @@ const putObjectFromURL = async ({ body, listingId }) => {
   const buffer = await Buffer.from(resp.data, 'base64');
 
   var params = {
-    Body: new Buffer(buffer),
+    Body: Buffer.from(buffer),
     Bucket: `${bucket || process.env.S3_BUCKET}/space-images/${listingId}`,
     Key: `${keyS}.jpg`,
     ContentEncoding: "base64",
@@ -39,7 +39,7 @@ const putObjectFromURL = async ({ body, listingId }) => {
 const putObject = async ({ file }, id) => {
   const keyS = new Date().valueOf().toString()
   var params = {
-    Body: new Buffer(file.replace(/^data:image\/\w+;base64,/, ""), "base64"),
+    Body: Buffer.from(file.replace(/^data:image\/\w+;base64,/, ""), "base64"),
     Bucket: `${process.env.S3_BUCKET}/space-images/${id}`,
     Key: `${keyS}.jpg`,
     ContentEncoding: "base64",
