@@ -56,6 +56,11 @@ provider:
   versionFunctions: false
   stage: ${opt:stage, 'sandpit'}
   region: ap-southeast-2
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - s3:*
+      Resource: "*"
   vpc:
     securityGroupIds:
       - ${self:custom.securityGroup.${opt:stage, 'sandpit'}}
