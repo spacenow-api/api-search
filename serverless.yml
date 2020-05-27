@@ -59,8 +59,8 @@ provider:
   iamRoleStatements:
     - Effect: Allow
       Action:
-        - s3:*
-      Resource: "*"
+        - "s3:PutObject"
+      Resource: "arn:aws:s3:::${self:custom.StageName, 'sandpit'}-spacenow-images"
   vpc:
     securityGroupIds:
       - ${self:custom.securityGroup.${opt:stage, 'sandpit'}}
