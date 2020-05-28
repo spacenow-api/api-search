@@ -14,7 +14,6 @@ module.exports = {
   },
 
   failure: (err) => {
-    console.error(err)
     return {
       headers: {
         'Access-Control-Allow-Origin': '*',

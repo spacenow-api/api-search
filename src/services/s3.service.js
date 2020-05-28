@@ -47,7 +47,7 @@ const putObject = async ({ file }, id) => {
   };
   return new Promise((resolve, reject) => {
     s3.putObject(params, (error, data) => {
-      if (error) reject(error);
+      if (error) { console.log("ERROR", error); reject(error) };
       resolve({
         url: `https://${process.env.S3_BUCKET}.s3.amazonaws.com/space-images/${id}/${keyS}.jpg`
       });
