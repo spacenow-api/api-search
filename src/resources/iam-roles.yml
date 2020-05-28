@@ -2,7 +2,7 @@ Resources:
   ExecutionRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: ${self:service}-exec-role
+      RoleName: ${self:service}-${opt:stage, 'sandpit'}-ap-southeast-2-lambdaRole
       AssumeRolePolicyDocument:
         Statement:
           - Effect: Allow

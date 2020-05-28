@@ -139,4 +139,4 @@ functions:
 
 resources:
   - ${file(src/resources/api-gateway-errors.yml)}
-  - ${file(src/resources/ima-roles.yml)}
+  - ${file(src/resources/iam-roles.yml)}
