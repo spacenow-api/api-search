@@ -75,7 +75,7 @@ provider:
       Action:
         - "s3:*"
       Resource:
-        - "arn:aws:s3:::*${opt:stage, 'sandpit'}-spacenow-images/*"
+        - "arn:aws:s3:::${opt:stage, 'sandpit'}-spacenow-images/*"
 
 functions:
   put-object:
