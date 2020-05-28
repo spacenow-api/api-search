@@ -73,10 +73,8 @@ provider:
   iamRoleStatements:
     - Effect: "Allow"
       Action:
-        - "s3:*"
-      Resource:
-        - "arn:aws:s3:::${opt:stage, 'sandpit'}-spacenow-images"
-        - "arn:aws:s3:::${opt:stage, 'sandpit'}-spacenow-images/*"
+        - "s3:PutObject"
+      Resource: "*"
 
 functions:
   put-object:
