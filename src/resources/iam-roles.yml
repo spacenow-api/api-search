@@ -36,4 +36,4 @@ Resources:
                   Fn::Join:
                     - ""
                     - - "arn:aws:s3:::"
-                      - "Ref": "${self:custom.StageName, 'sandpit'}-spacenow-images"
+                      - "Ref": "${self:custom.StageName, 'sandpit'-spacenow-images"

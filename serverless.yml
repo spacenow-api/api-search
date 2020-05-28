@@ -51,7 +51,6 @@ dotenv:
 
 provider:
   name: aws
-  role: ExecutionRole
   runtime: nodejs10.x
   timeout: 20
   versionFunctions: false
@@ -71,6 +70,15 @@ provider:
     DATABASE_PASSWORD: ${ssm:/${opt:stageCert, 'SANDPIT'}/SPACENOW/DATABASE_PASSWORD~true}
     GOOGLE_MAP_API: ${ssm:/${opt:stageCert, 'SANDPIT'}/SPACENOW/GOOGLE_MAP_API~true}
     REDIS_HOST: ${ssm:/${opt:stageCert, 'SANDPIT'}/SPACENOW/REDIS_HOST~true}
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "s3:*"
+      Resource:
+        Fn::Join:
+          - ""
+          - - "arn:aws:s3:::"
+            - Ref: "${self:custom.StageName, 'sandpit'}-spacenow-images"
 
 functions:
   put-object:
@@ -140,4 +148,3 @@ functions:
 
 resources:
   - ${file(src/resources/api-gateway-errors.yml)}
-  - ${file(src/resources/iam-roles.yml)}
