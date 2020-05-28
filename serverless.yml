@@ -79,20 +79,12 @@ provider:
 functions:
   put-object:
     handler: src/functions/aws/s3/put-object.main
+    memorySize: 1024
     events:
       - http:
           path: /v2/put-object/{id}
           method: post
-          cors:
-            origin: "*"
-            headers:
-              - Content-Type
-              - X-Amz-Date
-              - Authorization
-              - X-Api-Key
-              - X-Amz-Security-Token
-              - X-Amz-User-Agent
-            allowCredentials: true
+          cors: true
   put-object-from-url:
     handler: src/functions/aws/s3/put-object-from-url.main
     events:
