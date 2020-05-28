@@ -23,17 +23,9 @@ Resources:
                   - logs:CreateLogStream
                   - logs:PutLogEvents
                 Resource:
-                  Fn::Join:
-                    - ":"
-                    - - "arn:aws:logs"
-                      - Ref: "AWS::Region"
-                      - Ref: "AWS::AccountId"
-                      - "log-group:/aws/lambda/*:*:*"
+                  - "arn:aws:logs:ap-southeast-2:${opt:accountId, ''}:log-group:/aws/lambda/*:*:*"
               - Effect: Allow
                 Action:
                   - "s3:*"
                 Resource:
-                  Fn::Join:
-                    - ""
-                    - - "arn:aws:s3:::"
-                      - "Ref": "${self:custom.StageName, 'sandpit'-spacenow-images"
+                  - "arn:aws:s3:::*${self:custom.StageName, 'sandpit'}-spacenow-images/*"
