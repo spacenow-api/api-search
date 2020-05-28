@@ -89,7 +89,7 @@ functions:
     handler: src/functions/aws/s3/put-object-from-url.main
     events:
       - http:
-          path: put-object-from-url
+          path: /v2/put-object-from-url/{id}
           method: post
           cors:
             origin: "*"
