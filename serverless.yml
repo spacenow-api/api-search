@@ -61,7 +61,7 @@ provider:
     - Effect: Allow
       Action:
         - "s3:*"
-      Resource: "arn:aws:s3::${self:custom.StageName, 'sandpit'}-spacenow-images/*"
+      Resource: "arn:aws:s3::${opt:accountId, ''}:${self:custom.StageName, 'sandpit'}-spacenow-images/*"
   vpc:
     securityGroupIds:
       - ${self:custom.securityGroup.${opt:stage, 'sandpit'}}
