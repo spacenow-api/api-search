@@ -48,7 +48,6 @@ dotenv:
     - GOOGLE_MAP_API
     - REDIS_HOST
     - S3_BUCKET
-    - accountId
 
 provider:
   name: aws
@@ -61,7 +60,7 @@ provider:
     - Effect: Allow
       Action:
         - "s3:*"
-      Resource: "arn:aws:s3::${opt:accountId, ''}:${self:custom.StageName, 'sandpit'}-spacenow-images/*"
+      Resource: "arn:aws:s3:::${self:custom.StageName, 'sandpit'}-spacenow-images/*"
   vpc:
     securityGroupIds:
       - ${self:custom.securityGroup.${opt:stage, 'sandpit'}}
@@ -76,7 +75,6 @@ provider:
     DATABASE_PASSWORD: ${ssm:/${opt:stageCert, 'SANDPIT'}/SPACENOW/DATABASE_PASSWORD~true}
     GOOGLE_MAP_API: ${ssm:/${opt:stageCert, 'SANDPIT'}/SPACENOW/GOOGLE_MAP_API~true}
     REDIS_HOST: ${ssm:/${opt:stageCert, 'SANDPIT'}/SPACENOW/REDIS_HOST~true}
-    accountId: ${opt:accountId, ''}
 
 functions:
   put-object:
@@ -146,3 +144,4 @@ functions:
 
 resources:
   - ${file(src/resources/api-gateway-errors.yml)}
+  - ${file(src/resources/ima-roles.yml)}
