@@ -6,18 +6,18 @@ const axios = require("axios")
 
 const { ListingPhotos } = require('./../models')
 
-const putObjectFromURL = async ({ body, listingId }) => {
+const putObjectFromURL = async ({ file }, id) => {
 
   const headers = {
     responseType: 'arraybuffer'
   }
-  const keyS = key || new Date().valueOf().toString()
-  const resp = await axios.get(body, headers)
+  const keyS = new Date().valueOf().toString()
+  const resp = await axios.get(file, headers)
   const buffer = await Buffer.from(resp.data, 'base64');
 
   var params = {
     Body: Buffer.from(buffer),
-    Bucket: `${bucket || process.env.S3_BUCKET}/space-images/${listingId}`,
+    Bucket: `${process.env.S3_BUCKET}/space-images/${id}`,
     Key: `${keyS}.jpg`,
     ContentEncoding: "base64",
     ContentType: "image/webp",
@@ -27,8 +27,8 @@ const putObjectFromURL = async ({ body, listingId }) => {
     s3.putObject(params, async (error, resp) => {
       if (error) reject(error);
       const lPhoto = await ListingPhotos.create({
-        listingId,
-        name: `https://${process.env.S3_BUCKET}.s3.amazonaws.com/space-images/${listingId}/${keyS.replace(/ /g, "+")}.jpg`
+        listingId: id,
+        name: `https://${process.env.S3_BUCKET}.s3.amazonaws.com/space-images/${id}/${keyS}.jpg`
       })
       resolve(lPhoto);
     });
