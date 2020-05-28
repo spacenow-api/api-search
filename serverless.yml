@@ -73,6 +73,7 @@ provider:
 
 functions:
   put-object:
+    role: ${self:service}-lambdaExecRole
     handler: src/functions/aws/s3/put-object.main
     events:
       - http:
