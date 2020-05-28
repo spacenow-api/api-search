@@ -24,8 +24,8 @@ const putObjectFromURL = async ({ file }, id) => {
   };
 
   return new Promise((resolve, reject) => {
-    s3.putObject(params, async (error, resp) => {
-      if (error) reject(error);
+    s3.putObject(params, async (error) => {
+      if (error) reject(error)
       const lPhoto = await ListingPhotos.create({
         listingId: id,
         name: `https://${process.env.S3_BUCKET}.s3.amazonaws.com/space-images/${id}/${keyS}.jpg`
@@ -46,8 +46,8 @@ const putObject = async ({ file }, id) => {
     ContentType: "image/webp"
   };
   return new Promise((resolve, reject) => {
-    s3.putObject(params, (error, data) => {
-      if (error) { console.log("ERROR", error); reject(error) };
+    s3.putObject(params, (error) => {
+      if (error) reject(error)
       resolve({
         url: `https://${process.env.S3_BUCKET}.s3.amazonaws.com/space-images/${id}/${keyS}.jpg`
       });
