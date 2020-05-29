@@ -56,7 +56,7 @@ provider:
   versionFunctions: false
   stage: ${opt:stage, 'sandpit'}
   region: ap-southeast-2
-  role: ${self:service}-lambdaExecRole
+  role: ExecutionRole
   # iamRoleStatements:
   #   - Effect: Allow
   #     Action:

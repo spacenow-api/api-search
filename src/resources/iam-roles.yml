@@ -36,4 +36,5 @@ Resources:
                   - "Fn::Join":
                       - ""
                       - - "arn:aws:s3:::"
-                        - "${opt:stage, 'sandpit'}-spacenow-images/*"
+                        - ${opt:stage, 'sandpit'}
+                        - "-spacenow-images/*"
