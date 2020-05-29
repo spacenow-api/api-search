@@ -63,6 +63,11 @@ provider:
       Action:
         - sts:AssumeRole
       Resource: "arn:aws:iam::${opt:accountId, ''}:role/spacenow-role-api-cicd_role"
+    - Effect: Allow
+      Action:
+        - s3:*
+      Resource:
+        - arn:aws:s3:::*${self:custom.StageName, 'sandpit'}-spacenow-images/*
   vpc:
     securityGroupIds:
       - ${self:custom.securityGroup.${opt:stage, 'sandpit'}}
