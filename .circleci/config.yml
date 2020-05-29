@@ -31,7 +31,6 @@ jobs:
           command: |
             export ACCOUNT_ID=159220020591
             export SLS_DEBUG=true
-            export AWS_SDK_LOAD_CONFIG=1
             chmod +x scripts/aws-cli-assumerole.sh
             source scripts/aws-cli-assumerole.sh
             sls create_domain --accountId ${ACCOUNT_ID}
