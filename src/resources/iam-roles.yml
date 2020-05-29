@@ -28,4 +28,4 @@ Resources:
                 Action:
                   - s3:*
                 Resource:
-                  - ${arn:aws:s3:::*${self:custom.StageName, 'sandpit'}-spacenow-images/*}
+                  - ${arn:aws:s3:::*${opt:stage, 'sandpit'}-spacenow-images/*}
