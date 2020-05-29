@@ -33,4 +33,7 @@ Resources:
                 Action:
                   - s3:*
                 Resource:
-                  - ${arn:aws:s3:::*${opt:stage, 'sandpit'}-spacenow-images/*}
+                  Fn::Join:
+                    - ""
+                    - - "arn:aws:s3:::"
+                      - "*${opt:stage, 'sandpit'}-spacenow-images/*"
