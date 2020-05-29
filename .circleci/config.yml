@@ -34,8 +34,8 @@ jobs:
             export AWS_SDK_LOAD_CONFIG=1
             chmod +x scripts/aws-cli-assumerole.sh
             source scripts/aws-cli-assumerole.sh
-            sls create_domain --accountId ${ACCOUNT_ID} --profile spacenow-cli
-            sls deploy --accountId ${ACCOUNT_ID} --profile spacenow-cli
+            sls create_domain --accountId ${ACCOUNT_ID}
+            sls deploy --accountId ${ACCOUNT_ID}
 
   deploy-prod:
     docker:
