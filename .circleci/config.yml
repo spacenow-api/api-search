@@ -31,8 +31,10 @@ jobs:
           command: |
             export ACCOUNT_ID=159220020591
             export SLS_DEBUG=true
-            chmod +x scripts/aws-cli-assumerole.sh
-            source scripts/aws-cli-assumerole.sh
+            # chmod +x scripts/aws-cli-assumerole.sh
+            # source scripts/aws-cli-assumerole.sh
+            export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID_SANDPIT}
+            export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY_SANDPIT}
             sls create_domain --accountId ${ACCOUNT_ID}
             sls deploy --accountId ${ACCOUNT_ID}
 
