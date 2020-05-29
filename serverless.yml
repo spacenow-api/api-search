@@ -57,17 +57,17 @@ provider:
   versionFunctions: false
   stage: ${opt:stage, 'sandpit'}
   region: ap-southeast-2
-  # role: ${self:service}-lambdaExecRole
-  iamRoleStatements:
-    - Effect: Allow
-      Action:
-        - sts:AssumeRole
-      Resource: "arn:aws:iam::${opt:accountId, ''}:role/spacenow-role-api-cicd_role"
-    - Effect: Allow
-      Action:
-        - s3:*
-      Resource:
-        - arn:aws:s3:::*${self:custom.StageName, 'sandpit'}-spacenow-images/*
+  role: ${self:service}-lambdaExecRole
+  # iamRoleStatements:
+  #   - Effect: Allow
+  #     Action:
+  #       - sts:AssumeRole
+  #     Resource: "arn:aws:iam::${opt:accountId, ''}:role/spacenow-role-api-cicd_role"
+  #   - Effect: Allow
+  #     Action:
+  #       - s3:*
+  #     Resource:
+  #       - arn:aws:s3:::*${self:custom.StageName, 'sandpit'}-spacenow-images/*
   vpc:
     securityGroupIds:
       - ${self:custom.securityGroup.${opt:stage, 'sandpit'}}
@@ -135,4 +135,4 @@ functions:
 
 resources:
   - ${file(src/resources/api-gateway-errors.yml)}
-  # - ${file(src/resources/iam-roles.yml)}
+  - ${file(src/resources/iam-roles.yml)}
