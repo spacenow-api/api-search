@@ -23,7 +23,7 @@ Resources:
                   - logs:CreateLogStream
                   - logs:PutLogEvents
                 Resource:
-                  - arn:aws:logs:ap-southeast-2:${opt:accountId, ''}:log-group:/aws/lambda/*:*
+                  - arn:aws:logs:ap-southeast-2:${opt:accountId, ''}:log-group:/aws/lambda/*:*:*
               - Effect: Allow
                 Action:
                   - s3:*
