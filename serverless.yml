@@ -48,7 +48,6 @@ dotenv:
     - GOOGLE_MAP_API
     - REDIS_HOST
     - S3_BUCKET
-    - accountId
 
 provider:
   name: aws
@@ -82,7 +81,6 @@ provider:
     DATABASE_PASSWORD: ${ssm:/${opt:stageCert, 'SANDPIT'}/SPACENOW/DATABASE_PASSWORD~true}
     GOOGLE_MAP_API: ${ssm:/${opt:stageCert, 'SANDPIT'}/SPACENOW/GOOGLE_MAP_API~true}
     REDIS_HOST: ${ssm:/${opt:stageCert, 'SANDPIT'}/SPACENOW/REDIS_HOST~true}
-    accountId: ${opt:accountId, ''}
 
 functions:
   put-object:
