@@ -56,12 +56,7 @@ provider:
   versionFunctions: false
   stage: ${opt:stage, 'sandpit'}
   region: ap-southeast-2
-  role:
-    - "Fn::Join":
-        - ""
-        - - "arn:aws:iam::"
-          - ${opt:accountId}
-          - ":role/spacenow-role-api-cicd_role"
+  role: "arn:aws:iam::${opt:accountId}:role/spacenow-role-api-cicd_role"
   # role: ExecutionRole
   vpc:
     securityGroupIds:
