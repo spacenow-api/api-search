@@ -8,9 +8,6 @@ const { ListingPhotos } = require('./../models')
 
 const putObjectFromURL = async ({ file }, id) => {
 
-  console.log("accessKeyId", process.env.AWS_ACCESS_KEY_ID)
-  console.log("secretAccessKey", process.env.AWS_SECRET_ACCESS_KEY)
-
   const headers = {
     responseType: 'arraybuffer'
   }
